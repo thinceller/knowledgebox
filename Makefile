@@ -5,7 +5,7 @@ install:
 	which goose || go get -u github.com/pressly/goose/cmd/goose
 
 build:
-	go build -o bin/knowledgebox ./backend/main.go
+	go build -o bin/knowledgebox
 
 run:
 	./bin/knowledgebox
