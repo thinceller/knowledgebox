@@ -1,4 +1,5 @@
-// +heroku install ./... github.com/pressly/goose/cmd/goose
+// +heroku goVersion go1.14
+// +heroku install . github.com/pressly/goose/cmd/goose
 
 module github.com/thinceller/knowledgebox
 
