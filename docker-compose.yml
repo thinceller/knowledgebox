@@ -1,0 +1,12 @@
+version: '3'
+
+services:
+  db:
+    image: mysql:5.7
+    environment:
+      - MYSQL_ROOT_PASSWORD=${DB_ROOT_PASS:-root}
+      - MYSQL_USER=${DB_USER:-user}
+      - MYSQL_PASSWORD=${DB_PASSWORD:-password}
+      - MYSQL_DATABASE=${DATABASE:-development_kb}
+    ports:
+      - 3306:3306
