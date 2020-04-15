@@ -12,6 +12,17 @@ type PostRequest struct {
 	Title string `json:"title"`
 }
 
+type PostResponse struct {
+	Message string `json:"message"`
+}
+
+type Page struct {
+	Id    string
+	Title string
+}
+
+type Pages []Page
+
 func main() {
 	e := echo.New()
 
@@ -23,7 +34,11 @@ func main() {
 	}
 
 	e.GET("/", func(c echo.Context) error {
-		return c.String(http.StatusOK, "hello")
+		var pages Pages
+		if err := sqlHandler.DB.Select(&pages, "SELECT id, title FROM pages"); err != nil {
+			return err
+		}
+		return c.JSON(http.StatusOK, pages)
 	})
 	e.POST("/pages", func(c echo.Context) error {
 		req := new(PostRequest)
@@ -36,7 +51,10 @@ func main() {
 		if err != nil {
 			return err
 		}
-		return c.String(http.StatusCreated, "created.")
+		res := &PostResponse{
+			Message: "created.",
+		}
+		return c.JSON(http.StatusCreated, res)
 	})
 	e.Logger.Fatal(e.Start(":1323"))
 }
