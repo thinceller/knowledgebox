@@ -7,6 +7,9 @@ install:
 build:
 	go build -o bin/knowledgebox ./backend/main.go
 
+run:
+	./bin/knowledgebox
+
 clean:
 	rm -f bin/knowledgebox
 
@@ -22,4 +25,4 @@ migrate/up:
 migrate/down:
 	goose -dir "db/migrations" mysql "$(DBSOURCE)" down
 
-.PHONY: install build clean mysql migrate/status migrate/up migrate/down
+.PHONY: install build run clean mysql migrate/status migrate/up migrate/down
