@@ -5,13 +5,13 @@ install:
 	which goose || go get -u github.com/pressly/goose/cmd/goose
 
 build:
-	go build -o bin/knowledgebox
+	go build -o bin/knowledgebox ./backend/main.go
 
 clean:
 	rm -f bin/knowledgebox
 
 mysql:
-	docker-compose exec db mysql -u user -p
+	docker-compose exec db mysql -u user -p -h localhost -P 3306 "$(DBNAME)"
 
 migrate/status:
 	goose -dir "db/migrations" mysql "$(DBSOURCE)" status
