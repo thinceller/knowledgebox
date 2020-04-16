@@ -17,8 +17,8 @@ type PostResponse struct {
 }
 
 type Page struct {
-	Id    string
-	Title string
+	Id    string `json:"id"`
+	Title string `json:"title"`
 }
 
 type Pages []Page
