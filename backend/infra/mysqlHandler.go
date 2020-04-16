@@ -14,9 +14,16 @@ type SQLHandler struct {
 }
 
 func NewMySQLHander() *SQLHandler {
-	err := godotenv.Load()
-	if err != nil {
-		log.Fatalf("error loading env file. %s", err)
+	env := os.Getenv("APP_ENV")
+	if env == "" {
+		env = "development"
+	}
+
+	if env != "production" {
+		err := godotenv.Load()
+		if err != nil {
+			log.Fatalf("error loading env file. %s", err)
+		}
 	}
 
 	datasource := os.Getenv("MYSQL_DATASOURCE")
