@@ -6,7 +6,7 @@ const Index: NextPage<any> = ({ data }) => (
 )
 
 export const getServerSideProps: GetServerSideProps = async () => {
-  const res = await fetch('http://localhost:1323')
+  const res = await fetch('http://localhost:1323/pages')
   const data = await res.json()
 
   return { props: { data } }
