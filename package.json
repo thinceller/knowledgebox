@@ -5,6 +5,7 @@
   "author": "thinceller <thinceller@gmail.com>",
   "license": "MIT",
   "dependencies": {
+    "@material-ui/core": "^4.9.11",
     "next": "^9.3.4",
     "node-fetch": "^2.6.0",
     "react": "^16.13.1",
