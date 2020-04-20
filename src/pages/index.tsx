@@ -1,9 +1,10 @@
+import React from 'react'
 import { NextPage, GetServerSideProps } from 'next'
 import fetch from 'node-fetch'
 
 import { Layout } from '../components/Layout'
 import { Page } from '../models/Page'
-import {Card} from '../components/Card'
+import { Card } from '../components/Card'
 
 type IndexProps = {
   pages: Page[]

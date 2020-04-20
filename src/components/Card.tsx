@@ -5,8 +5,4 @@ type CardProps = {
   title: string
 }
 
-export const Card: React.FC<CardProps> = ({ title }) => (
-  <MCard>
-    {title}
-  </MCard>
-)
+export const Card: React.FC<CardProps> = ({ title }) => <MCard>{title}</MCard>
