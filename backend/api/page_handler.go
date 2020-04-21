@@ -31,6 +31,13 @@ func (h *PageHandler) Index(c echo.Context) error {
 	return c.JSON(http.StatusOK, pages)
 }
 
+func (h *PageHandler) Get(c echo.Context) error {
+	title := c.Param("title")
+	page := h.repository.Get(title)
+
+	return c.JSON(http.StatusOK, page)
+}
+
 func (h *PageHandler) Create(c echo.Context) error {
 	req := new(PostRequest)
 	err := c.Bind(req)

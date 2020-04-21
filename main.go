@@ -24,6 +24,7 @@ func main() {
 
 	// routing 設定
 	e.GET("/pages", pageHandler.Index)
+	e.GET("/pages/:title", pageHandler.Get)
 	e.POST("/pages", pageHandler.Create)
 
 	e.Logger.Fatal(e.Start(":1323"))
