@@ -38,9 +38,18 @@ func (r *PageRepository) All() domain.Pages {
 }
 
 func (r *PageRepository) Get(title string) *domain.Page {
-	var page *domain.Page
+	var page domain.Page
+	if err := r.DB.Get(&page, "SELECT * from page WHERE title = ? LIMIT 1", title); err != nil {
+		log.Fatal(err)
+	}
+	if err := r.DB.Select(
+		&page.Lines, "SELECT * from line WHERE line.page_id = ? ORDER BY page_index",
+		page.Id,
+	); err != nil {
+		log.Fatal(err)
+	}
 
-	return page
+	return &page
 }
 
 // TODO: line の生成も同時に行っているので application層に分けたい
