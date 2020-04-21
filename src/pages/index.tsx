@@ -5,6 +5,7 @@ import fetch from 'node-fetch'
 import { Layout } from '../components/Layout'
 import { Page } from '../models/Page'
 import { Card } from '../components/Card'
+import { CardList } from '../components/CardList'
 
 type IndexProps = {
   pages: Page[]
@@ -12,9 +13,11 @@ type IndexProps = {
 
 const Index: NextPage<IndexProps> = ({ pages }) => (
   <Layout>
-    {pages.map(page => (
-      <Card key={page.id} title={page.title} />
-    ))}
+    <CardList>
+      {pages.map(page => (
+        <Card key={page.id} title={page.title} />
+      ))}
+    </CardList>
   </Layout>
 )
 
