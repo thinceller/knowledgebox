@@ -1,5 +1,6 @@
 import React from 'react'
 import { NextPage, GetServerSideProps } from 'next'
+import Error from 'next/error'
 import fetch from 'node-fetch'
 
 import { Layout } from '../components/Layout'
@@ -10,6 +11,9 @@ type PageProps = {
 }
 
 const PageDetail: NextPage<PageProps> = ({ page }) => {
+  if (!page.title) {
+    return <Error statusCode={404} />
+  }
   return (
     <Layout>
       <h2>{page.title}</h2>
@@ -19,10 +23,11 @@ const PageDetail: NextPage<PageProps> = ({ page }) => {
   )
 }
 
-export const getServerSideProps: GetServerSideProps = async ctx => {
-  const { title } = ctx.params
-  const res = await fetch(`http://localhost:1323/pages/${title}`)
-  const page = await res.json()
+export const getServerSideProps: GetServerSideProps = async ({ params }) => {
+  const { title } = params
+  // page 用に最適化したい
+  const response = await fetch(`http://localhost:1323/pages/${title}`)
+  const page = await response.json()
   console.log(page)
 
   return { props: { page } }

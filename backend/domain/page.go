@@ -9,8 +9,8 @@ type Page struct {
 type Pages []*Page
 
 type PageRepository interface {
-	All() Pages
-	Get(title string) *Page
-	Create(title string)
-	Save()
+	All() (Pages, error)
+	Get(title string) (*Page, error)
+	Create(title string) error
+	Save() error
 }

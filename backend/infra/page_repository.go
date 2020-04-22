@@ -17,10 +17,10 @@ func NewPageRepository(db *sqlx.DB) domain.PageRepository {
 	return &PageRepository{DB: db}
 }
 
-func (r *PageRepository) All() domain.Pages {
+func (r *PageRepository) All() (domain.Pages, error) {
 	var pages domain.Pages
 	if err := r.DB.Select(&pages, "SELECT * FROM page"); err != nil {
-		log.Fatal(err)
+		return nil, err
 	}
 
 	// TODO: N+1問題解消
@@ -30,30 +30,30 @@ func (r *PageRepository) All() domain.Pages {
 			"SELECT * FROM line WHERE line.page_id = ? ORDER BY page_index",
 			p.Id,
 		); err != nil {
-			log.Fatal(err)
+			return nil, err
 		}
 	}
 
-	return pages
+	return pages, nil
 }
 
-func (r *PageRepository) Get(title string) *domain.Page {
+func (r *PageRepository) Get(title string) (*domain.Page, error) {
 	var page domain.Page
 	if err := r.DB.Get(&page, "SELECT * from page WHERE title = ? LIMIT 1", title); err != nil {
-		log.Fatal(err)
+		return nil, err
 	}
 	if err := r.DB.Select(
 		&page.Lines, "SELECT * from line WHERE line.page_id = ? ORDER BY page_index",
 		page.Id,
 	); err != nil {
-		log.Fatal(err)
+		return nil, err
 	}
 
-	return &page
+	return &page, nil
 }
 
 // TODO: line の生成も同時に行っているので application層に分けたい
-func (r *PageRepository) Create(title string) {
+func (r *PageRepository) Create(title string) error {
 	tx := r.DB.MustBegin()
 	defer func() {
 		if rollbackErr := tx.Rollback(); rollbackErr != nil {
@@ -66,7 +66,7 @@ func (r *PageRepository) Create(title string) {
 	result := tx.MustExec("INSERT INTO page (title) VALUES (?)", title)
 	page_id, err := result.LastInsertId()
 	if err != nil {
-		log.Fatal(err)
+		return err
 	}
 
 	_ = tx.MustExec(
@@ -78,12 +78,12 @@ func (r *PageRepository) Create(title string) {
 
 	err = tx.Commit()
 	if err != nil {
-		log.Fatal(err)
+		return err
 	}
 
-	return
+	return nil
 }
 
-func (r *PageRepository) Save() {
-	return
+func (r *PageRepository) Save() error {
+	return nil
 }
