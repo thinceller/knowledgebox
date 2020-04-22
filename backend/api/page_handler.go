@@ -27,25 +27,34 @@ func NewPageHandler(repo domain.PageRepository) *PageHandler {
 }
 
 func (h *PageHandler) Index(c echo.Context) error {
-	pages := h.repository.All()
+	pages, err := h.repository.All()
+	if err != nil {
+		return err
+	}
+
 	return c.JSON(http.StatusOK, pages)
 }
 
 func (h *PageHandler) Get(c echo.Context) error {
 	title := c.Param("title")
-	page := h.repository.Get(title)
+	page, err := h.repository.Get(title)
+	if err != nil {
+		return err
+	}
 
 	return c.JSON(http.StatusOK, page)
 }
 
 func (h *PageHandler) Create(c echo.Context) error {
 	req := new(PostRequest)
-	err := c.Bind(req)
-	if err != nil {
+	if err := c.Bind(req); err != nil {
 		return err
 	}
 
-	h.repository.Create(req.Title)
+	if err := h.repository.Create(req.Title); err != nil {
+		return err
+	}
+
 	res := &PostResponse{
 		Message: "created.",
 	}
