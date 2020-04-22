@@ -22,7 +22,9 @@ export const Card: React.FC<CardProps> = ({ title }) => {
   return (
     <Box>
       <Link href={`/${title}`}>
-        <MCard className={styles.card}>{title}</MCard>
+        <a>
+          <MCard className={styles.card}>{title}</MCard>
+        </a>
       </Link>
     </Box>
   )
