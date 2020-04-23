@@ -76,14 +76,62 @@ func (r *PageRepository) Create(title string) error {
 		0,
 	)
 
-	err = tx.Commit()
-	if err != nil {
+	if err := tx.Commit(); err != nil {
 		return err
 	}
 
 	return nil
 }
 
-func (r *PageRepository) Save() error {
+func (r *PageRepository) Save(page *domain.Page) error {
+	tx := r.DB.MustBegin()
+	defer func() {
+		if rollbackErr := tx.Rollback(); rollbackErr != nil {
+			if rollbackErr != sql.ErrTxDone {
+				log.Fatal(rollbackErr)
+			}
+		}
+	}()
+
+	// page 本体の更新
+	_ = tx.MustExec(
+		"UPDATE page SET title = ? WHERE id = ?",
+		page.Title,
+		page.Id,
+	)
+
+	// lines の更新/追加
+	for _, line := range page.Lines {
+		if line.Id == 0 {
+			// 新しい行追加
+			result, err := tx.Exec(
+				"INSERT INTO line (body,page_id,page_index) VALUES (?,?,?)",
+				line.Body,
+				line.PageId,
+				line.PageIndex,
+			)
+			if err != nil {
+				return err
+			}
+
+			if id, err := result.LastInsertId(); err != nil {
+				return err
+			} else {
+				line.Id = int(id)
+			}
+		} else {
+			_ = tx.MustExec(
+				"UPDATE line SET body = ?, page_index = ? WHERE id = ?",
+				line.Body,
+				line.PageIndex,
+				line.Id,
+			)
+		}
+	}
+
+	if err := tx.Commit(); err != nil {
+		return err
+	}
+
 	return nil
 }

@@ -26,6 +26,7 @@ func main() {
 	e.GET("/pages", pageHandler.Index)
 	e.GET("/pages/:title", pageHandler.Get)
 	e.POST("/pages", pageHandler.Create)
+	e.PUT("/pages/:title", pageHandler.Save)
 
 	e.Logger.Fatal(e.Start(":1323"))
 }

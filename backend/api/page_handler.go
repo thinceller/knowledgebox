@@ -20,6 +20,10 @@ type PostResponse struct {
 	Message string `json:"message"`
 }
 
+type PutRequest struct {
+	Page domain.Page `json:"page"`
+}
+
 func NewPageHandler(repo domain.PageRepository) *PageHandler {
 	return &PageHandler{
 		repository: repo,
@@ -59,4 +63,17 @@ func (h *PageHandler) Create(c echo.Context) error {
 		Message: "created.",
 	}
 	return c.JSON(http.StatusCreated, res)
+}
+
+func (h *PageHandler) Save(c echo.Context) error {
+	page := new(domain.Page)
+	if err := c.Bind(page); err != nil {
+		return err
+	}
+
+	if err := h.repository.Save(page); err != nil {
+		return err
+	}
+
+	return c.JSON(http.StatusOK, page)
 }
