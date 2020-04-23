@@ -1,9 +1,9 @@
 package domain
 
 type Line struct {
-	Id        string `json:"id" db:"id"`
+	Id        int    `json:"id" db:"id"`
 	Body      string `json:"body" db:"body"`
-	PageId    string `json:"page_id" db:"page_id"`
+	PageId    int    `json:"page_id" db:"page_id"`
 	PageIndex int    `json:"page_index" db:"page_index"`
 }
 
