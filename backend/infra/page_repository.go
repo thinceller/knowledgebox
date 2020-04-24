@@ -135,3 +135,24 @@ func (r *PageRepository) Save(page *domain.Page) error {
 
 	return nil
 }
+
+func (r *PageRepository) Delete(page *domain.Page) error {
+	tx := r.DB.MustBegin()
+	defer func() {
+		if rollbackErr := tx.Rollback(); rollbackErr != nil {
+			if rollbackErr != sql.ErrTxDone {
+				log.Fatal(rollbackErr)
+			}
+		}
+	}()
+
+	_ = tx.MustExec("DELETE FROM line WHERE page_id = ?", page.Id)
+
+	_ = tx.MustExec("DELETE FROM page WHERE id = ?", page.Id)
+
+	if err := tx.Commit(); err != nil {
+		return err
+	}
+
+	return nil
+}

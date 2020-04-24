@@ -13,4 +13,5 @@ type PageRepository interface {
 	Get(title string) (*Page, error)
 	Create(title string) error
 	Save(page *Page) error
+	Delete(page *Page) error
 }

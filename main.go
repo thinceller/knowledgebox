@@ -27,6 +27,7 @@ func main() {
 	e.GET("/pages/:title", pageHandler.Get)
 	e.POST("/pages", pageHandler.Create)
 	e.PUT("/pages/:title", pageHandler.Save)
+	e.DELETE("/pages/:title", pageHandler.Delete)
 
 	e.Logger.Fatal(e.Start(":1323"))
 }
