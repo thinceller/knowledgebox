@@ -4,6 +4,7 @@ import Error from 'next/error'
 import fetch from 'node-fetch'
 
 import { Layout } from '../components/Layout'
+import { Editor } from '../components/Editor'
 import { Page } from '../models/Page'
 
 type PageProps = {
@@ -16,9 +17,11 @@ const PageDetail: NextPage<PageProps> = ({ page }) => {
   }
   return (
     <Layout>
-      <h2>{page.title}</h2>
-      {page.lines &&
-        page.lines.map(line => <div key={line.id}>{line.body}</div>)}
+      <Editor>
+        <h2>{page.title}</h2>
+        {page.lines &&
+          page.lines.map(line => <div key={line.id}>{line.body}</div>)}
+      </Editor>
     </Layout>
   )
 }
@@ -28,7 +31,6 @@ export const getServerSideProps: GetServerSideProps = async ({ params }) => {
   // page 用に最適化したい
   const response = await fetch(`http://localhost:1323/pages/${title}`)
   const page = await response.json()
-  console.log(page)
 
   return { props: { page } }
 }
