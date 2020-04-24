@@ -77,3 +77,16 @@ func (h *PageHandler) Save(c echo.Context) error {
 
 	return c.JSON(http.StatusOK, page)
 }
+
+func (h *PageHandler) Delete(c echo.Context) error {
+	page := new(domain.Page)
+	if err := c.Bind(page); err != nil {
+		return err
+	}
+
+	if err := h.repository.Delete(page); err != nil {
+		return err
+	}
+
+	return c.NoContent(http.StatusNoContent)
+}
