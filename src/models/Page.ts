@@ -1,7 +1,7 @@
 import { Line } from './Line'
 
 export type Page = {
-  id: string
+  id: number
   title: string
   lines: Line[]
 }
