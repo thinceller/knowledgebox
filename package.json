@@ -7,13 +7,15 @@
   "dependencies": {
     "@material-ui/core": "^4.9.11",
     "@material-ui/icons": "^4.9.1",
+    "immer": "^6.0.3",
     "lodash-es": "^4.17.15",
     "next": "^9.3.4",
     "next-transpile-modules": "^3.2.0",
     "node-fetch": "^2.6.0",
     "react": "^16.13.1",
     "react-contenteditable": "^3.3.4",
-    "react-dom": "^16.13.1"
+    "react-dom": "^16.13.1",
+    "use-immer": "^0.4.0"
   },
   "devDependencies": {
     "@types/lodash-es": "^4.17.3",
