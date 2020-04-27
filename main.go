@@ -4,6 +4,7 @@ import (
 	"log"
 
 	"github.com/labstack/echo/v4"
+	"github.com/labstack/echo/v4/middleware"
 
 	"github.com/thinceller/knowledgebox/backend/infra"
 	"github.com/thinceller/knowledgebox/backend/injector"
@@ -21,6 +22,8 @@ func main() {
 	}
 
 	pageHandler := injector.InjectDBtoHandler(sqlHandler.DB)
+
+	e.Use(middleware.CORS())
 
 	// routing 設定
 	e.GET("/pages", pageHandler.Index)
