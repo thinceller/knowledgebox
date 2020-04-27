@@ -13,15 +13,12 @@ type PageProps = {
 
 const PageDetail: NextPage<PageProps> = ({ page }) => {
   if (!page.title) {
+    // TODO: 新しいページを作る画面に遷移
     return <Error statusCode={404} />
   }
   return (
     <Layout>
-      <Editor>
-        <h2>{page.title}</h2>
-        {page.lines &&
-          page.lines.map(line => <div key={line.id}>{line.body}</div>)}
-      </Editor>
+      <Editor pageData={page} />
     </Layout>
   )
 }
