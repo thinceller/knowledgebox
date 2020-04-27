@@ -1,6 +1,6 @@
 export type Line = {
-  id: string
+  id: number
   body: string
-  page_id: string
-  page_index: string
+  page_id: number
+  page_index: number
 }
