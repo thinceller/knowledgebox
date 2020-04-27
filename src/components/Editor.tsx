@@ -112,8 +112,10 @@ export const Editor: React.FC<EditorProps> = ({ pageData }) => {
       <Container className={styles.editor}>
         <ContentEditable
           html={page.lines[0]?.body}
+          onKeyPress={checkPressEnter}
           onChange={(): void => console.log('title')}
           className={styles.title}
+          data-index={0}
         />
         {page.lines.map(line => {
           if (line.page_index === 0) {
