@@ -1049,6 +1049,18 @@
   resolved "https://registry.yarnpkg.com/@types/json-schema/-/json-schema-7.0.4.tgz#38fd73ddfd9b55abb1e1b2ed578cb55bd7b7d339"
   integrity sha512-8+KAKzEvSUdeo+kmqnKrqgeE+LcA0tjYWFY7RPProVYwnqDjukzO+3b6dLD56rYX5TdWejnEOLJYOIeh4CXKuA==
 
+"@types/lodash-es@^4.17.3":
+  version "4.17.3"
+  resolved "https://registry.yarnpkg.com/@types/lodash-es/-/lodash-es-4.17.3.tgz#87eb0b3673b076b8ee655f1890260a136af09a2d"
+  integrity sha512-iHI0i7ZAL1qepz1Y7f3EKg/zUMDwDfTzitx+AlHhJJvXwenP682ZyGbgPSc5Ej3eEAKVbNWKFuwOadCj5vBbYQ==
+  dependencies:
+    "@types/lodash" "*"
+
+"@types/lodash@*":
+  version "4.14.150"
+  resolved "https://registry.yarnpkg.com/@types/lodash/-/lodash-4.14.150.tgz#649fe44684c3f1fcb6164d943c5a61977e8cf0bd"
+  integrity sha512-kMNLM5JBcasgYscD9x/Gvr6lTAv2NVgsKtet/hm93qMyf/D1pt+7jeEZklKJKxMVmXjxbRVQQGfqDSfipYCO6w==
+
 "@types/node-fetch@^2.5.6":
   version "2.5.6"
   resolved "https://registry.yarnpkg.com/@types/node-fetch/-/node-fetch-2.5.6.tgz#df8377a66e64ddf75b65b072e37b3c5c5425a96f"
@@ -3858,6 +3870,11 @@ locate-path@^5.0.0:
   dependencies:
     p-locate "^4.1.0"
 
+lodash-es@^4.17.15:
+  version "4.17.15"
+  resolved "https://registry.yarnpkg.com/lodash-es/-/lodash-es-4.17.15.tgz#21bd96839354412f23d7a10340e5eac6ee455d78"
+  integrity sha512-rlrc3yU3+JNOpZ9zj5pQtxnx2THmvRykwL4Xlxoa8I9lHBlVbbyPhgyPMioxVZ4NqyxaVVtaJnzsyOidQIhyyQ==
+
 lodash@^4.17.11, lodash@^4.17.13, lodash@^4.17.14, lodash@^4.17.15:
   version "4.17.15"
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.15.tgz#b447f6670a0455bbfeedd11392eff330ea097548"
@@ -4150,6 +4167,14 @@ next-tick@~1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/next-tick/-/next-tick-1.0.0.tgz#ca86d1fe8828169b0120208e3dc8424b9db8342c"
   integrity sha1-yobR/ogoFpsBICCOPchCS524NCw=
+
+next-transpile-modules@^3.2.0:
+  version "3.2.0"
+  resolved "https://registry.yarnpkg.com/next-transpile-modules/-/next-transpile-modules-3.2.0.tgz#1e5afb008f839c78a09d66c8379bd5b30cb975a7"
+  integrity sha512-JyT/FPH0mgLX8Pxv0pVfwqQv8flmjolDrqvtP6Ce228vVNPs7EmQd+qYR4kxRdgL2tMTkPeE98FG9qFabTxblA==
+  dependencies:
+    micromatch "^4.0.2"
+    slash "^3.0.0"
 
 next@^9.3.4:
   version "9.3.4"
