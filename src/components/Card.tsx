@@ -21,7 +21,7 @@ export const Card: React.FC<CardProps> = ({ title }) => {
   const styles = useStyles()
   return (
     <Box>
-      <Link href={`/${title}`}>
+      <Link href="/[title]" as={`/${title}`}>
         <a>
           <MCard className={styles.card}>{title}</MCard>
         </a>
