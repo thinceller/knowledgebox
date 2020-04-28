@@ -24,6 +24,11 @@ type PutRequest struct {
 	Page domain.Page `json:"page"`
 }
 
+type APIError struct {
+	Code    int    `json:"code"`
+	Message string `json:"message"`
+}
+
 func NewPageHandler(repo domain.PageRepository) *PageHandler {
 	return &PageHandler{
 		repository: repo,
@@ -33,6 +38,10 @@ func NewPageHandler(repo domain.PageRepository) *PageHandler {
 func (h *PageHandler) Index(c echo.Context) error {
 	pages, err := h.repository.All()
 	if err != nil {
+		var apierr APIError
+		apierr.Code = http.StatusInternalServerError
+		apierr.Message = err.Error()
+		c.JSON(http.StatusInternalServerError, apierr)
 		return err
 	}
 
@@ -43,6 +52,10 @@ func (h *PageHandler) Get(c echo.Context) error {
 	title := c.Param("title")
 	page, err := h.repository.Get(title)
 	if err != nil {
+		var apierr APIError
+		apierr.Code = http.StatusInternalServerError
+		apierr.Message = err.Error()
+		c.JSON(http.StatusInternalServerError, apierr)
 		return err
 	}
 
@@ -52,10 +65,18 @@ func (h *PageHandler) Get(c echo.Context) error {
 func (h *PageHandler) Create(c echo.Context) error {
 	req := new(PostRequest)
 	if err := c.Bind(req); err != nil {
+		var apierr APIError
+		apierr.Code = http.StatusBadRequest
+		apierr.Message = err.Error()
+		c.JSON(http.StatusBadRequest, apierr)
 		return err
 	}
 
 	if err := h.repository.Create(req.Title); err != nil {
+		var apierr APIError
+		apierr.Code = http.StatusInternalServerError
+		apierr.Message = err.Error()
+		c.JSON(http.StatusInternalServerError, apierr)
 		return err
 	}
 
@@ -68,10 +89,18 @@ func (h *PageHandler) Create(c echo.Context) error {
 func (h *PageHandler) Save(c echo.Context) error {
 	page := new(domain.Page)
 	if err := c.Bind(page); err != nil {
+		var apierr APIError
+		apierr.Code = http.StatusBadRequest
+		apierr.Message = err.Error()
+		c.JSON(http.StatusBadRequest, apierr)
 		return err
 	}
 
 	if err := h.repository.Save(page); err != nil {
+		var apierr APIError
+		apierr.Code = http.StatusInternalServerError
+		apierr.Message = err.Error()
+		c.JSON(http.StatusInternalServerError, apierr)
 		return err
 	}
 
@@ -81,10 +110,18 @@ func (h *PageHandler) Save(c echo.Context) error {
 func (h *PageHandler) Delete(c echo.Context) error {
 	page := new(domain.Page)
 	if err := c.Bind(page); err != nil {
+		var apierr APIError
+		apierr.Code = http.StatusBadRequest
+		apierr.Message = err.Error()
+		c.JSON(http.StatusBadRequest, apierr)
 		return err
 	}
 
 	if err := h.repository.Delete(page); err != nil {
+		var apierr APIError
+		apierr.Code = http.StatusInternalServerError
+		apierr.Message = err.Error()
+		c.JSON(http.StatusInternalServerError, apierr)
 		return err
 	}
 

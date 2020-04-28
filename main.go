@@ -24,6 +24,7 @@ func main() {
 	pageHandler := injector.InjectDBtoHandler(sqlHandler.DB)
 
 	e.Use(middleware.CORS())
+	e.Use(middleware.Logger())
 
 	// routing 設定
 	e.GET("/pages", pageHandler.Index)
