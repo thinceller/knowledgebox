@@ -6,12 +6,12 @@ import { Editor } from '../components/Editor'
 import { Page } from '../models/Page'
 
 /* eslint-disable @typescript-eslint/camelcase */
-const createEmptyPage = (): Page => ({
+export const createEmptyPage = (): Page => ({
   id: null,
   title: '',
   lines: [
     {
-      id: undefined,
+      id: null,
       body: '',
       page_id: null,
       page_index: 0,

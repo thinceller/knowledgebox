@@ -1,4 +1,5 @@
 import React from 'react'
+import { useRouter } from 'next/router'
 import ContentEditable, { ContentEditableEvent } from 'react-contenteditable'
 import cloneDeep from 'lodash-es/cloneDeep'
 import { useImmer } from 'use-immer'
@@ -38,6 +39,7 @@ type EditorProps = {
 export const Editor: React.FC<EditorProps> = ({ pageData }) => {
   const mainStyles = useMainStyles()
   const styles = useStyles()
+  const router = useRouter()
 
   const [page, updatePage] = useImmer<Page>(cloneDeep(pageData))
   // const [isTitleChanged, setIsTitleChanged] = React.useState(false)
@@ -65,6 +67,17 @@ export const Editor: React.FC<EditorProps> = ({ pageData }) => {
           line.page_index = i
         })
         latestUpdatedLine.current = index
+      })
+    },
+    [updatePage],
+  )
+
+  const handleTitleChange = React.useCallback(
+    (event: ContentEditableEvent) => {
+      const title = event.target.value
+      updatePage(draft => {
+        draft.title = title
+        draft.lines[0].body = title
       })
     },
     [updatePage],
@@ -100,8 +113,20 @@ export const Editor: React.FC<EditorProps> = ({ pageData }) => {
   )
 
   const handleSaveClick = React.useCallback(async (): Promise<void> => {
-    await apiClient.put(`/pages/${page.title}`, page)
-  }, [page])
+    // page.id が存在しないのはDBに保存されていないページ
+    // そのため、new page でも [title] page でも post をすればよい
+    if (!page.id) {
+      await apiClient.post(`/pages`, page)
+    } else {
+      await apiClient.put(`/pages/${page.title}`, page)
+    }
+
+    // 正常に通信が成功した場合、new page または title が変更されていれば
+    //   [title] page に遷移する
+    if (router.pathname === '/new' || router.pathname !== `/${page.title}`) {
+      router.push('/[title]', `/${page.title}`)
+    }
+  }, [page, router])
 
   return (
     <Container className={mainStyles.mainContainer}>
@@ -114,7 +139,7 @@ export const Editor: React.FC<EditorProps> = ({ pageData }) => {
                 key={line.page_index}
                 html={line.body}
                 onKeyPress={checkPressEnter}
-                onChange={(): void => console.log('title')}
+                onChange={handleTitleChange}
                 data-index={line.page_index}
               />
             )
