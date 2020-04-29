@@ -46,7 +46,6 @@ export const Editor: React.FC<EditorProps> = ({ pageData }) => {
   // focus to latest updated line
   React.useEffect(() => {
     const currentIndex = latestUpdatedLine.current
-    console.log('ref: ', currentIndex)
     if (currentIndex) {
       const line = document.querySelectorAll('.line')[
         currentIndex - 1
