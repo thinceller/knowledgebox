@@ -9,6 +9,7 @@ import { makeStyles } from '@material-ui/core/styles'
 import { useMainStyles } from './CardList'
 import { Page } from '../models/Page'
 import { Line } from '../models/Line'
+import { apiClient } from '../config/client'
 
 export const useStyles = makeStyles({
   editor: {
@@ -100,11 +101,7 @@ export const Editor: React.FC<EditorProps> = ({ pageData }) => {
   )
 
   const handleSaveClick = React.useCallback(async (): Promise<void> => {
-    await fetch(`http://localhost:1323/pages/${page.title}`, {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(page),
-    })
+    await apiClient.put(`/pages/${page.title}`, page)
   }, [page])
 
   return (
@@ -114,10 +111,11 @@ export const Editor: React.FC<EditorProps> = ({ pageData }) => {
           if (line.page_index === 0) {
             return (
               <ContentEditable
+                className={styles.title}
+                key={line.page_index}
                 html={line.body}
                 onKeyPress={checkPressEnter}
                 onChange={(): void => console.log('title')}
-                className={styles.title}
                 data-index={line.page_index}
               />
             )

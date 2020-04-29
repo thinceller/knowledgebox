@@ -1,11 +1,11 @@
 import React from 'react'
 import { NextPage, GetServerSideProps } from 'next'
 import Error from 'next/error'
-import fetch from 'node-fetch'
 
 import { Layout } from '../components/Layout'
 import { Editor } from '../components/Editor'
 import { Page } from '../models/Page'
+import { apiClient } from '../config/client'
 
 type PageProps = {
   page: Page
@@ -26,8 +26,8 @@ const PageDetail: NextPage<PageProps> = ({ page }) => {
 export const getServerSideProps: GetServerSideProps = async ({ params }) => {
   const { title } = params
   // page 用に最適化したい
-  const response = await fetch(`http://localhost:1323/pages/${title}`)
-  const page = await response.json()
+  const response = await apiClient.get(`/pages/${title}`)
+  const page = response.data
 
   return { props: { page } }
 }
