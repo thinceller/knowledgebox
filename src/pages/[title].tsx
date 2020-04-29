@@ -1,5 +1,6 @@
 import React from 'react'
 import { NextPage, GetServerSideProps } from 'next'
+import Head from 'next/head'
 import Error from 'next/error'
 
 import { Layout } from '../components/Layout'
@@ -17,9 +18,14 @@ const PageDetail: NextPage<PageProps> = ({ page }) => {
     return <Error statusCode={404} />
   }
   return (
-    <Layout>
-      <Editor pageData={page} />
-    </Layout>
+    <>
+      <Head>
+        <title>{page.title} - knowledgebox</title>
+      </Head>
+      <Layout>
+        <Editor pageData={page} />
+      </Layout>
+    </>
   )
 }
 
