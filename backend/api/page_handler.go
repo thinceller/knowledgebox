@@ -12,10 +12,6 @@ type PageHandler struct {
 	repository domain.PageRepository
 }
 
-type PostRequest struct {
-	Title string `json:"title"`
-}
-
 type PostResponse struct {
 	Message string `json:"message"`
 }
@@ -63,8 +59,8 @@ func (h *PageHandler) Get(c echo.Context) error {
 }
 
 func (h *PageHandler) Create(c echo.Context) error {
-	req := new(PostRequest)
-	if err := c.Bind(req); err != nil {
+	page := new(domain.Page)
+	if err := c.Bind(page); err != nil {
 		var apierr APIError
 		apierr.Code = http.StatusBadRequest
 		apierr.Message = err.Error()
@@ -72,7 +68,7 @@ func (h *PageHandler) Create(c echo.Context) error {
 		return err
 	}
 
-	if err := h.repository.Create(req.Title); err != nil {
+	if err := h.repository.Create(page); err != nil {
 		var apierr APIError
 		apierr.Code = http.StatusInternalServerError
 		apierr.Message = err.Error()
