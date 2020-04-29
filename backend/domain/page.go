@@ -11,7 +11,7 @@ type Pages []*Page
 type PageRepository interface {
 	All() (Pages, error)
 	Get(title string) (*Page, error)
-	Create(title string) error
+	Create(page *Page) error
 	Save(page *Page) error
 	Delete(page *Page) error
 }

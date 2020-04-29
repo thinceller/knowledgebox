@@ -53,7 +53,7 @@ func (r *PageRepository) Get(title string) (*domain.Page, error) {
 }
 
 // TODO: line の生成も同時に行っているので application層に分けたい
-func (r *PageRepository) Create(title string) error {
+func (r *PageRepository) Create(page *domain.Page) error {
 	tx := r.DB.MustBegin()
 	defer func() {
 		if rollbackErr := tx.Rollback(); rollbackErr != nil {
@@ -63,18 +63,24 @@ func (r *PageRepository) Create(title string) error {
 		}
 	}()
 
-	result := tx.MustExec("INSERT INTO page (title) VALUES (?)", title)
-	page_id, err := result.LastInsertId()
+	result, err := tx.Exec("INSERT INTO page (title) VALUES (?)", page.Title)
 	if err != nil {
 		return err
 	}
 
-	_ = tx.MustExec(
-		"INSERT INTO line (body,page_id,page_index) VALUES (?,?,?)",
-		title,
-		page_id,
-		0,
-	)
+	pageId, err := result.LastInsertId()
+	if err != nil {
+		return err
+	}
+
+	for _, line := range page.Lines {
+		_ = tx.MustExec(
+			"INSERT INTO line (body,page_id,page_index) VALUES (?,?,?)",
+			line.Body,
+			pageId,
+			line.PageIndex,
+		)
+	}
 
 	if err := tx.Commit(); err != nil {
 		return err
