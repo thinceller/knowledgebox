@@ -1,7 +1,7 @@
 DBNAME := development_kb
 TEST_DBNAME := test_kb
 DBSOURCE := root:root@tcp(127.0.0.1:3306)/$(DBNAME)?parseTime=true
-TEST_DBSOURCE := root:root@tcp(127.0.0.1:3306)/$(TEST_DBNAME)?parseTime=true
+TEST_DBSOURCE := root:root@tcp(127.0.0.1:3306)/$(TEST_DBNAME)?parseTime=true&multiStatements=true
 
 install:
 	which goose || go get -u github.com/pressly/goose/cmd/goose
