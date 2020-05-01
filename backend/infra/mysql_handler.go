@@ -19,13 +19,14 @@ func NewMySQLHander() *SQLHandler {
 		env = "development"
 	}
 
-	if env != "production" {
+	if env == "development" {
 		err := godotenv.Load()
 		if err != nil {
 			log.Fatalf("error loading env file. %s", err)
 		}
 	}
 
+	// TODO: DBを変更できるように修正
 	datasource := os.Getenv("MYSQL_DATASOURCE")
 	db, err := sqlx.Open("mysql", datasource)
 	if err != nil {

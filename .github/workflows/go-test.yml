@@ -1,0 +1,35 @@
+name: Go test
+
+on:
+  push:
+    branches-ignore:
+      - master
+
+jobs:
+  go_test:
+    runs-on: ubuntu-latest
+
+    services:
+      mysql:
+        image: mysql:5.7
+        env:
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_DATABASE: test_kb
+        ports:
+          - 3306:3306
+
+    env:
+      APP_ENV: test
+      MYSQL_DATABASE: root:root@tcp(mysql:3306)/$(test_kb)?parseTime=true&multiStatements=true
+    steps:
+      - uses: actions/checkout@v1
+      - uses: actions/setup-go@v2
+        with:
+          go-version: '^1.14.1'
+
+      - name: install migration tool
+        run: GO111MODULE=off go get -u github.com/pressly/goose/cmd/goose
+      - name: run migration
+        run: make migrate/up/test
+      - name: run test
+        run: make test
