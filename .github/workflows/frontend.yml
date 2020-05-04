@@ -1,4 +1,4 @@
-name: eslint CI
+name: Front-end CI
 
 on:
   push:
@@ -15,3 +15,13 @@ jobs:
         run: yarn install
       - name: run eslint
         run: yarn lint
+
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v1
+      - name: yarn install
+        run: yarn install
+      - name: run jest
+        run: yarn test
