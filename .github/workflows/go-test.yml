@@ -27,6 +27,13 @@ jobs:
         with:
           go-version: '^1.14.1'
 
+      - uses: actions/cache@v1
+        with:
+          path: ~/go/pkg/mod
+          key: ${{ runner.os  }}-go-${{ hashFiles('**/go.sum')  }}
+          restore-keys: |
+            ${{ runner.os  }}-go-
+
       - name: install migration tool
         run: GO111MODULE=off go get -u github.com/pressly/goose/cmd/goose
       - name: run migration

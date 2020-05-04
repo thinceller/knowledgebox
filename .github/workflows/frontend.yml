@@ -11,6 +11,20 @@ jobs:
 
     steps:
       - uses: actions/checkout@v1
+
+      # https://github.com/actions/cache/blob/9ceee97d994dd3474c5f24cf7c8dbe82667565cb/examples.md#node---yarn
+      - name: Get yarn cache directory path
+        id: yarn-cache-dir-path
+        run: echo "::set-output name=dir::$(yarn cache dir)"
+
+      - uses: actions/cache@v1
+        id: yarn-cache # use this to check for `cache-hit` (`steps.yarn-cache.outputs.cache-hit != 'true'`)
+        with:
+          path: ${{ steps.yarn-cache-dir-path.outputs.dir  }}
+          key: ${{ runner.os  }}-yarn-${{ hashFiles('**/yarn.lock')  }}
+          restore-keys: |
+            ${{ runner.os  }}-yarn-
+
       - name: yarn install
         run: yarn install
       - name: run eslint
@@ -21,6 +35,20 @@ jobs:
 
     steps:
       - uses: actions/checkout@v1
+
+      # https://github.com/actions/cache/blob/9ceee97d994dd3474c5f24cf7c8dbe82667565cb/examples.md#node---yarn
+      - name: Get yarn cache directory path
+        id: yarn-cache-dir-path
+        run: echo "::set-output name=dir::$(yarn cache dir)"
+
+      - uses: actions/cache@v1
+        id: yarn-cache # use this to check for `cache-hit` (`steps.yarn-cache.outputs.cache-hit != 'true'`)
+        with:
+          path: ${{ steps.yarn-cache-dir-path.outputs.dir  }}
+          key: ${{ runner.os  }}-yarn-${{ hashFiles('**/yarn.lock')  }}
+          restore-keys: |
+            ${{ runner.os  }}-yarn-
+
       - name: yarn install
         run: yarn install
       - name: run jest
