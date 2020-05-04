@@ -6,6 +6,7 @@ module.exports = {
       tsConfig: '<rootDir>/tsconfig.jest.json'
     }
   },
+  coverageDirectory: '<rootDir>/.coverage',
   // Setup Enzyme
   snapshotSerializers: ['enzyme-to-json/serializer'],
   setupFilesAfterEnv: ['<rootDir>/src/setupEnzyme.ts'],
