@@ -2,6 +2,7 @@
 node_modules/
 bin/
 vendor/
+.coverage/
 
 yarn-error.log
 cover.out
