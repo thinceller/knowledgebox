@@ -54,7 +54,7 @@ func TestNewPageRepository(t *testing.T) {
 		want domain.PageRepository
 	}{
 		{
-			name: "Create new page repository",
+			name: "PageRepository の初期化に成功",
 			args: args{db: db},
 			want: &PageRepository{DB: db},
 		},
@@ -81,7 +81,7 @@ func TestPageRepository_All(t *testing.T) {
 		wantErr bool
 	}{
 		{
-			name:   "PageRepository.All test",
+			name:   "Page の全取得に成功",
 			fields: fields{DB: db},
 			want: domain.Pages{
 				{
@@ -148,6 +148,8 @@ func TestPageRepository_All(t *testing.T) {
 }
 
 func TestPageRepository_Get(t *testing.T) {
+	prepareTestDatabase()
+
 	type fields struct {
 		DB *sqlx.DB
 	}
@@ -161,7 +163,36 @@ func TestPageRepository_Get(t *testing.T) {
 		want    *domain.Page
 		wantErr bool
 	}{
-		// TODO: Add test cases.
+		{
+			name:   "タイトルによる Page の取得に成功",
+			fields: fields{DB: db},
+			args:   args{title: "testpage"},
+			want: &domain.Page{
+				Id:    1,
+				Title: "testpage",
+				Lines: []*domain.Line{
+					{
+						Id:        1,
+						Body:      "testpage",
+						PageId:    1,
+						PageIndex: 0,
+					},
+					{
+						Id:        2,
+						Body:      "",
+						PageId:    1,
+						PageIndex: 1,
+					},
+				},
+			},
+			wantErr: false,
+		},
+		{
+			name:    "タイトルによる Page の取得に失敗: 存在しないページ",
+			fields:  fields{DB: db},
+			args:    args{title: "unknown page"},
+			wantErr: true,
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -193,7 +224,42 @@ func TestPageRepository_Create(t *testing.T) {
 		args    args
 		wantErr bool
 	}{
-		// TODO: Add test cases.
+		{
+			name:   "新規 Page の作成成功",
+			fields: fields{DB: db},
+			args: args{page: &domain.Page{
+				Title: "new page",
+				Lines: []*domain.Line{
+					{
+						Body:      "newpage",
+						PageIndex: 0,
+					},
+					{
+						Body:      "first line",
+						PageIndex: 1,
+					},
+				},
+			}},
+			wantErr: false,
+		},
+		{
+			name:   "新規 Page の作成失敗: タイトルの重複",
+			fields: fields{DB: db},
+			args: args{page: &domain.Page{
+				Title: "testpage",
+				Lines: []*domain.Line{
+					{
+						Body:      "testpage",
+						PageIndex: 0,
+					},
+					{
+						Body:      "first line",
+						PageIndex: 1,
+					},
+				},
+			}},
+			wantErr: true,
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -208,6 +274,8 @@ func TestPageRepository_Create(t *testing.T) {
 }
 
 func TestPageRepository_Save(t *testing.T) {
+	prepareTestDatabase()
+
 	type fields struct {
 		DB *sqlx.DB
 	}
@@ -220,7 +288,34 @@ func TestPageRepository_Save(t *testing.T) {
 		args    args
 		wantErr bool
 	}{
-		// TODO: Add test cases.
+		{
+			name:   "Page の保存成功",
+			fields: fields{DB: db},
+			args: args{page: &domain.Page{
+				Id:    1,
+				Title: "testpage",
+				Lines: []*domain.Line{
+					{
+						Id:        1,
+						Body:      "testpage",
+						PageId:    1,
+						PageIndex: 0,
+					},
+					{
+						Id:        2,
+						Body:      "",
+						PageId:    1,
+						PageIndex: 1,
+					},
+					{
+						Body:      "new line",
+						PageId:    1,
+						PageIndex: 2,
+					},
+				},
+			}},
+			wantErr: false,
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -235,6 +330,8 @@ func TestPageRepository_Save(t *testing.T) {
 }
 
 func TestPageRepository_Delete(t *testing.T) {
+	prepareTestDatabase()
+
 	type fields struct {
 		DB *sqlx.DB
 	}
@@ -247,7 +344,35 @@ func TestPageRepository_Delete(t *testing.T) {
 		args    args
 		wantErr bool
 	}{
-		// TODO: Add test cases.
+		{
+			name:   "Page の削除成功",
+			fields: fields{DB: db},
+			args: args{page: &domain.Page{
+				Id:    2,
+				Title: "testpage_2",
+				Lines: []*domain.Line{
+					{
+						Id:        3,
+						Body:      "testpage_2",
+						PageId:    2,
+						PageIndex: 0,
+					},
+					{
+						Id:        4,
+						Body:      "first line",
+						PageId:    2,
+						PageIndex: 1,
+					},
+					{
+						Id:        5,
+						Body:      "second line",
+						PageId:    2,
+						PageIndex: 2,
+					},
+				},
+			}},
+			wantErr: false,
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
