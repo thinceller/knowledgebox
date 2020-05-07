@@ -4,6 +4,7 @@ import (
 	"os"
 	"reflect"
 	"testing"
+	"time"
 
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/go-testfixtures/testfixtures/v3"
@@ -13,8 +14,9 @@ import (
 )
 
 var (
-	db       *sqlx.DB
-	fixtures *testfixtures.Loader
+	db         *sqlx.DB
+	fixtures   *testfixtures.Loader
+	targetTime time.Time
 )
 
 func TestMain(m *testing.M) {
@@ -33,6 +35,8 @@ func TestMain(m *testing.M) {
 	if err != nil {
 		panic(err)
 	}
+
+	targetTime = time.Date(2020, time.December, 31, 23, 59, 59, 0, time.UTC)
 
 	runTests := m.Run()
 	os.Exit(runTests)
@@ -85,44 +89,58 @@ func TestPageRepository_All(t *testing.T) {
 			fields: fields{DB: db},
 			want: domain.Pages{
 				{
-					Id:    1,
-					Title: "testpage",
+					Id:        1,
+					Title:     "testpage",
+					CreatedAt: &targetTime,
+					UpdatedAt: &targetTime,
 					Lines: []*domain.Line{
 						{
 							Id:        1,
 							Body:      "testpage",
 							PageId:    1,
 							PageIndex: 0,
+							CreatedAt: &targetTime,
+							UpdatedAt: &targetTime,
 						},
 						{
 							Id:        2,
 							Body:      "",
 							PageId:    1,
 							PageIndex: 1,
+							CreatedAt: &targetTime,
+							UpdatedAt: &targetTime,
 						},
 					},
 				},
 				{
-					Id:    2,
-					Title: "testpage_2",
+					Id:        2,
+					Title:     "testpage_2",
+					CreatedAt: &targetTime,
+					UpdatedAt: &targetTime,
 					Lines: []*domain.Line{
 						{
 							Id:        3,
 							Body:      "testpage_2",
 							PageId:    2,
 							PageIndex: 0,
+							CreatedAt: &targetTime,
+							UpdatedAt: &targetTime,
 						},
 						{
 							Id:        4,
 							Body:      "first line",
 							PageId:    2,
 							PageIndex: 1,
+							CreatedAt: &targetTime,
+							UpdatedAt: &targetTime,
 						},
 						{
 							Id:        5,
 							Body:      "second line",
 							PageId:    2,
 							PageIndex: 2,
+							CreatedAt: &targetTime,
+							UpdatedAt: &targetTime,
 						},
 					},
 				},
@@ -168,20 +186,26 @@ func TestPageRepository_Get(t *testing.T) {
 			fields: fields{DB: db},
 			args:   args{title: "testpage"},
 			want: &domain.Page{
-				Id:    1,
-				Title: "testpage",
+				Id:        1,
+				Title:     "testpage",
+				CreatedAt: &targetTime,
+				UpdatedAt: &targetTime,
 				Lines: []*domain.Line{
 					{
 						Id:        1,
 						Body:      "testpage",
 						PageId:    1,
 						PageIndex: 0,
+						CreatedAt: &targetTime,
+						UpdatedAt: &targetTime,
 					},
 					{
 						Id:        2,
 						Body:      "",
 						PageId:    1,
 						PageIndex: 1,
+						CreatedAt: &targetTime,
+						UpdatedAt: &targetTime,
 					},
 				},
 			},

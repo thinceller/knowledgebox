@@ -9,12 +9,16 @@ import { Page } from '../models/Page'
 export const createEmptyPage = (): Page => ({
   id: null,
   title: '',
+  created_at: null,
+  updated_at: null,
   lines: [
     {
       id: null,
       body: '',
       page_id: null,
       page_index: 0,
+      created_at: null,
+      updated_at: null,
     },
   ],
 })

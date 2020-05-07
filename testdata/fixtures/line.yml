@@ -2,20 +2,30 @@
   body: testpage
   page_id: 1
   page_index: 0
+  created_at: 2020-12-31 23:59:59 UTC
+  updated_at: 2020-12-31 23:59:59 UTC
 - id: 2
   body: ''
   page_id: 1
   page_index: 1
+  created_at: 2020-12-31 23:59:59 UTC
+  updated_at: 2020-12-31 23:59:59 UTC
 - id: 3
   body: testpage_2
   page_id: 2
   page_index: 0
+  created_at: 2020-12-31 23:59:59 UTC
+  updated_at: 2020-12-31 23:59:59 UTC
 - id: 4
   body: first line
   page_id: 2
   page_index: 1
+  created_at: 2020-12-31 23:59:59 UTC
+  updated_at: 2020-12-31 23:59:59 UTC
 - id: 5
   body: second line
   page_id: 2
   page_index: 2
+  created_at: 2020-12-31 23:59:59 UTC
+  updated_at: 2020-12-31 23:59:59 UTC
 
