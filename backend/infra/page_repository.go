@@ -63,7 +63,7 @@ func (r *PageRepository) Create(page *domain.Page) error {
 		}
 	}()
 
-	result, err := tx.Exec("INSERT INTO page (title) VALUES (?)", page.Title)
+	result, err := tx.Exec("INSERT INTO page (title,created_at) VALUES (?,NOW())", page.Title)
 	if err != nil {
 		return err
 	}
@@ -75,7 +75,7 @@ func (r *PageRepository) Create(page *domain.Page) error {
 
 	for _, line := range page.Lines {
 		_ = tx.MustExec(
-			"INSERT INTO line (body,page_id,page_index) VALUES (?,?,?)",
+			"INSERT INTO line (body,page_id,page_index,created_at) VALUES (?,?,?,NOW())",
 			line.Body,
 			pageId,
 			line.PageIndex,
@@ -111,7 +111,7 @@ func (r *PageRepository) Save(page *domain.Page) error {
 		if line.Id == 0 {
 			// 新しい行追加
 			result, err := tx.Exec(
-				"INSERT INTO line (body,page_id,page_index) VALUES (?,?,?)",
+				"INSERT INTO line (body,page_id,page_index,created_at) VALUES (?,?,?,NOW())",
 				line.Body,
 				line.PageId,
 				line.PageIndex,
