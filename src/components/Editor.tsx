@@ -30,6 +30,8 @@ const createNewLine = (pageId: number, pageIndex: number): Line => ({
   body: '',
   page_id: pageId,
   page_index: pageIndex,
+  created_at: undefined,
+  updated_at: undefined,
 })
 
 type EditorProps = {

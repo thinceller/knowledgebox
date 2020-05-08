@@ -3,4 +3,6 @@ export type Line = {
   body: string
   page_id: number
   page_index: number
+  created_at: Date
+  updated_at: Date
 }

@@ -19,7 +19,7 @@ func NewPageRepository(db *sqlx.DB) domain.PageRepository {
 
 func (r *PageRepository) All() (domain.Pages, error) {
 	var pages domain.Pages
-	if err := r.DB.Select(&pages, "SELECT * FROM page"); err != nil {
+	if err := r.DB.Select(&pages, "SELECT * FROM page ORDER BY updated_at DESC"); err != nil {
 		return nil, err
 	}
 
@@ -101,7 +101,7 @@ func (r *PageRepository) Save(page *domain.Page) error {
 
 	// page 本体の更新
 	_ = tx.MustExec(
-		"UPDATE page SET title = ? WHERE id = ?",
+		"UPDATE page SET title = ?, updated_at = NOW() WHERE id = ?",
 		page.Title,
 		page.Id,
 	)
