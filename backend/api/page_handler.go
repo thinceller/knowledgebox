@@ -123,3 +123,15 @@ func (h *PageHandler) Delete(c echo.Context) error {
 
 	return c.NoContent(http.StatusNoContent)
 }
+
+func (h *PageHandler) Search(c echo.Context) error {
+	query := c.QueryParam("q")
+	// TODO: query がない場合の400error
+
+	pages, err := h.repository.Search(query)
+	if err != nil {
+		return err
+	}
+
+	return c.JSON(http.StatusOK, pages)
+}
