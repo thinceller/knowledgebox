@@ -9,7 +9,6 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/go-testfixtures/testfixtures/v3"
 	"github.com/jmoiron/sqlx"
-
 	"github.com/thinceller/knowledgebox/backend/domain"
 )
 
@@ -235,6 +234,70 @@ func TestPageRepository_Get(t *testing.T) {
 	}
 }
 
+func TestPageRepository_GetByID(t *testing.T) {
+	prepareTestDatabase()
+
+	type fields struct {
+		DB *sqlx.DB
+	}
+	type args struct {
+		id int
+	}
+	tests := []struct {
+		name    string
+		fields  fields
+		args    args
+		want    *domain.Page
+		wantErr bool
+	}{
+		{
+			name:   "タイトルによる Page の取得に成功",
+			fields: fields{DB: db},
+			args:   args{id: 1},
+			want: &domain.Page{
+				Id:        1,
+				Title:     "testpage",
+				CreatedAt: &targetTime,
+				UpdatedAt: &targetTime,
+				Lines: []*domain.Line{
+					{
+						Id:        1,
+						Body:      "testpage",
+						PageId:    1,
+						PageIndex: 0,
+						CreatedAt: &targetTime,
+						UpdatedAt: &targetTime,
+					},
+					{
+						Id:        2,
+						Body:      "",
+						PageId:    1,
+						PageIndex: 1,
+						CreatedAt: &targetTime,
+						UpdatedAt: &targetTime,
+					},
+				},
+			},
+			wantErr: false,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			r := &PageRepository{
+				DB: tt.fields.DB,
+			}
+			got, err := r.GetByID(tt.args.id)
+			if (err != nil) != tt.wantErr {
+				t.Errorf("PageRepository.GetByID() error = %v, wantErr %v", err, tt.wantErr)
+				return
+			}
+			if !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("PageRepository.GetByID() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
 func TestPageRepository_Create(t *testing.T) {
 	type fields struct {
 		DB *sqlx.DB
@@ -405,6 +468,144 @@ func TestPageRepository_Delete(t *testing.T) {
 			}
 			if err := r.Delete(tt.args.page); (err != nil) != tt.wantErr {
 				t.Errorf("PageRepository.Delete() error = %v, wantErr %v", err, tt.wantErr)
+			}
+		})
+	}
+}
+
+func TestPageRepository_Search(t *testing.T) {
+	prepareTestDatabase()
+
+	type fields struct {
+		DB *sqlx.DB
+	}
+	type args struct {
+		query string
+	}
+	tests := []struct {
+		name    string
+		fields  fields
+		args    args
+		want    domain.Pages
+		wantErr bool
+	}{
+		{
+			name:   "Page の検索成功",
+			fields: fields{DB: db},
+			args:   args{query: "page"},
+			want: domain.Pages{
+				{
+					Id:        1,
+					Title:     "testpage",
+					CreatedAt: &targetTime,
+					UpdatedAt: &targetTime,
+					Lines: []*domain.Line{
+						{
+							Id:        1,
+							Body:      "testpage",
+							PageId:    1,
+							PageIndex: 0,
+							CreatedAt: &targetTime,
+							UpdatedAt: &targetTime,
+						},
+						{
+							Id:        2,
+							Body:      "",
+							PageId:    1,
+							PageIndex: 1,
+							CreatedAt: &targetTime,
+							UpdatedAt: &targetTime,
+						},
+					},
+				},
+				{
+					Id:        2,
+					Title:     "testpage_2",
+					CreatedAt: &targetTime,
+					UpdatedAt: &targetTime,
+					Lines: []*domain.Line{
+						{
+							Id:        3,
+							Body:      "testpage_2",
+							PageId:    2,
+							PageIndex: 0,
+							CreatedAt: &targetTime,
+							UpdatedAt: &targetTime,
+						},
+						{
+							Id:        4,
+							Body:      "first line",
+							PageId:    2,
+							PageIndex: 1,
+							CreatedAt: &targetTime,
+							UpdatedAt: &targetTime,
+						},
+						{
+							Id:        5,
+							Body:      "second line",
+							PageId:    2,
+							PageIndex: 2,
+							CreatedAt: &targetTime,
+							UpdatedAt: &targetTime,
+						},
+					},
+				},
+			},
+			wantErr: false,
+		},
+		{
+			name:   "Page の部分検索成功",
+			fields: fields{DB: db},
+			args:   args{query: "first"},
+			want: domain.Pages{
+				{
+					Id:        2,
+					Title:     "testpage_2",
+					CreatedAt: &targetTime,
+					UpdatedAt: &targetTime,
+					Lines: []*domain.Line{
+						{
+							Id:        3,
+							Body:      "testpage_2",
+							PageId:    2,
+							PageIndex: 0,
+							CreatedAt: &targetTime,
+							UpdatedAt: &targetTime,
+						},
+						{
+							Id:        4,
+							Body:      "first line",
+							PageId:    2,
+							PageIndex: 1,
+							CreatedAt: &targetTime,
+							UpdatedAt: &targetTime,
+						},
+						{
+							Id:        5,
+							Body:      "second line",
+							PageId:    2,
+							PageIndex: 2,
+							CreatedAt: &targetTime,
+							UpdatedAt: &targetTime,
+						},
+					},
+				},
+			},
+			wantErr: false,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			r := &PageRepository{
+				DB: tt.fields.DB,
+			}
+			got, err := r.Search(tt.args.query)
+			if (err != nil) != tt.wantErr {
+				t.Errorf("PageRepository.Search() error = %v, wantErr %v", err, tt.wantErr)
+				return
+			}
+			if !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("PageRepository.Search() = %v, want %v", got, tt.want)
 			}
 		})
 	}
