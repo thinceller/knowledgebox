@@ -2,6 +2,7 @@ package infra
 
 import (
 	"database/sql"
+	"fmt"
 	"log"
 
 	"github.com/jmoiron/sqlx"
@@ -40,6 +41,21 @@ func (r *PageRepository) All() (domain.Pages, error) {
 func (r *PageRepository) Get(title string) (*domain.Page, error) {
 	var page domain.Page
 	if err := r.DB.Get(&page, "SELECT * from page WHERE title = ? LIMIT 1", title); err != nil {
+		return nil, err
+	}
+	if err := r.DB.Select(
+		&page.Lines, "SELECT * from line WHERE line.page_id = ? ORDER BY page_index",
+		page.Id,
+	); err != nil {
+		return nil, err
+	}
+
+	return &page, nil
+}
+
+func (r *PageRepository) GetByID(id int) (*domain.Page, error) {
+	var page domain.Page
+	if err := r.DB.Get(&page, "SELECT * from page WHERE id = ? LIMIT 1", id); err != nil {
 		return nil, err
 	}
 	if err := r.DB.Select(
@@ -161,4 +177,32 @@ func (r *PageRepository) Delete(page *domain.Page) error {
 	}
 
 	return nil
+}
+
+func (r *PageRepository) Search(query string) (domain.Pages, error) {
+	var pages domain.Pages
+	var pageIds []int
+
+	if err := r.DB.Select(
+		&pageIds,
+		"SELECT page_id FROM line WHERE body LIKE ? group by page_id",
+		"%"+query+"%",
+	); err != nil {
+		return nil, err
+	}
+	fmt.Println(pageIds)
+	if len(pageIds) == 0 {
+		// TODO: 404 返したい
+		return nil, nil
+	}
+
+	for _, id := range pageIds {
+		page, err := r.GetByID(id)
+		if err != nil {
+			return nil, err
+		}
+		pages = append(pages, page)
+	}
+
+	return pages, nil
 }

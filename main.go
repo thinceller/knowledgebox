@@ -48,6 +48,7 @@ func main() {
 	e.POST("/api/pages", pageHandler.Create)
 	e.PUT("/api/pages/:title", pageHandler.Save)
 	e.DELETE("/api/pages/:title", pageHandler.Delete)
+	e.GET("/api/search", pageHandler.Search)
 
 	var addr string
 	if env == "production" {
