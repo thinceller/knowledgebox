@@ -43,11 +43,11 @@ func main() {
 	e.Use(middleware.Logger())
 
 	// routing 設定
-	e.GET("/pages", pageHandler.Index)
-	e.GET("/pages/:title", pageHandler.Get)
-	e.POST("/pages", pageHandler.Create)
-	e.PUT("/pages/:title", pageHandler.Save)
-	e.DELETE("/pages/:title", pageHandler.Delete)
+	e.GET("/api/pages", pageHandler.Index)
+	e.GET("/api/pages/:title", pageHandler.Get)
+	e.POST("/api/pages", pageHandler.Create)
+	e.PUT("/api/pages/:title", pageHandler.Save)
+	e.DELETE("/api/pages/:title", pageHandler.Delete)
 
 	var addr string
 	if env == "production" {
