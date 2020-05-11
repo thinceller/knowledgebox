@@ -7,10 +7,10 @@ import Container from '@material-ui/core/Container'
 import Button from '@material-ui/core/Button'
 import { makeStyles } from '@material-ui/core/styles'
 
-import { useMainStyles } from './CardList'
 import { Page } from '../models/Page'
 import { Line } from '../models/Line'
 import { apiClient } from '../config/client'
+import { MainContainer } from './MainContainer'
 
 export const useStyles = makeStyles({
   editor: {
@@ -39,7 +39,6 @@ type EditorProps = {
 }
 
 export const Editor: React.FC<EditorProps> = ({ pageData }) => {
-  const mainStyles = useMainStyles()
   const styles = useStyles()
   const router = useRouter()
 
@@ -131,7 +130,7 @@ export const Editor: React.FC<EditorProps> = ({ pageData }) => {
   }, [page, router])
 
   return (
-    <Container className={mainStyles.mainContainer}>
+    <MainContainer>
       <Container className={styles.editor}>
         {page.lines.map(line => {
           if (line.page_index === 0) {
@@ -161,7 +160,7 @@ export const Editor: React.FC<EditorProps> = ({ pageData }) => {
       <Button variant="contained" color="primary" onClick={handleSaveClick}>
         Save
       </Button>
-    </Container>
+    </MainContainer>
   )
 }
 /* eslint-enable @typescript-eslint/camelcase */
