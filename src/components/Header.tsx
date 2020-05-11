@@ -76,12 +76,14 @@ export const Header: React.FC = () => {
   const classes = useStyles()
 
   const router = useRouter()
-  const [input, updateInput] = React.useState<string>(
-    (router.query?.q as string) || '',
-  )
+  const query = router.query.q as string
+  const [input, updateInput] = React.useState<string>(query || '')
   React.useEffect(() => {
-    updateInput(router.query.q as string)
-  }, [router.query.q])
+    if (!query) {
+      return
+    }
+    updateInput(query)
+  }, [query])
 
   const handleInputChange = React.useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -128,7 +130,6 @@ export const Header: React.FC = () => {
                   root: classes.inputRoot,
                   input: classes.inputInput,
                 }}
-                inputProps={{ 'aria-label': 'search' }}
                 value={input}
                 onChange={handleInputChange}
               />
