@@ -1,4 +1,5 @@
 import React from 'react'
+import { useRouter } from 'next/router'
 import { fade, makeStyles } from '@material-ui/core/styles'
 import AppBar from '@material-ui/core/AppBar'
 import Typography from '@material-ui/core/Typography'
@@ -8,6 +9,7 @@ import SearchIcon from '@material-ui/icons/Search'
 import Link from 'next/link'
 import Fab from '@material-ui/core/Fab'
 import AddIcon from '@material-ui/icons/Add'
+import ButtonBase from '@material-ui/core/ButtonBase'
 
 // ref: https://material-ui.com/components/app-bar/#app-bar-with-a-primary-search-field
 const useStyles = makeStyles(theme => ({
@@ -43,7 +45,8 @@ const useStyles = makeStyles(theme => ({
   inputInput: {
     padding: theme.spacing(1, 1, 1, 0),
     // vertical padding + font size from searchIcon
-    paddingLeft: `calc(1em + ${theme.spacing(4)}px)`,
+    // paddingLeft: `calc(1em + ${theme.spacing(4)}px)`,
+    paddingLeft: theme.spacing(2),
     transition: theme.transitions.create('width'),
     width: '100%',
     [theme.breakpoints.up('md')]: {
@@ -72,6 +75,34 @@ const useStyles = makeStyles(theme => ({
 export const Header: React.FC = () => {
   const classes = useStyles()
 
+  const router = useRouter()
+  const [input, updateInput] = React.useState<string>(
+    (router.query?.q as string) || '',
+  )
+  React.useEffect(() => {
+    updateInput(router.query.q as string)
+  }, [router.query.q])
+
+  const handleInputChange = React.useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      const { value } = e.currentTarget
+      updateInput(value)
+    },
+    [],
+  )
+  const handleSearchSubmit = React.useCallback(
+    (e: React.FormEvent): void => {
+      e.preventDefault()
+      if (!input) {
+        // input が空のときはなにもしない
+        return
+      }
+
+      router.push(`/search?q=${input}`)
+    },
+    [input, router],
+  )
+
   return (
     <div className={classes.grow}>
       <AppBar style={{ backgroundColor: 'orange' }}>
@@ -90,17 +121,21 @@ export const Header: React.FC = () => {
             </Fab>
           </Link>
           <div className={classes.search}>
-            <div className={classes.searchIcon}>
-              <SearchIcon />
-            </div>
-            <InputBase
-              placeholder="Search…"
-              classes={{
-                root: classes.inputRoot,
-                input: classes.inputInput,
-              }}
-              inputProps={{ 'aria-label': 'search' }}
-            />
+            <form onSubmit={handleSearchSubmit}>
+              <InputBase
+                placeholder="Search…"
+                classes={{
+                  root: classes.inputRoot,
+                  input: classes.inputInput,
+                }}
+                inputProps={{ 'aria-label': 'search' }}
+                value={input}
+                onChange={handleInputChange}
+              />
+              <ButtonBase type="submit">
+                <SearchIcon />
+              </ButtonBase>
+            </form>
           </div>
           <div className={classes.grow} />
         </Toolbar>
