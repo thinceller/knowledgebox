@@ -11,6 +11,8 @@ github.com/go-testfixtures/testfixtures v1.7.0 h1:a6HVQ3jYe0lm1H+T1ryt2fOwF1P5OG
 github.com/go-testfixtures/testfixtures v2.5.1+incompatible h1:IBJp7NQjfdUHc4+gDH0j1e76LilPeMZuvm/oEUhDwxo=
 github.com/go-testfixtures/testfixtures/v3 v3.1.2 h1:sACIJoknTtWHbz5wahA6f50IGsz7oBXS+jgm0eKl4eI=
 github.com/go-testfixtures/testfixtures/v3 v3.1.2/go.mod h1:RZctY24ixituGC73XlAV1gkCwYMVwiSwPm26MNlQIhE=
+github.com/go-testfixtures/testfixtures/v3 v3.2.0 h1:FGAW3z5UzmrZGjR/dZp1u3Tbld0SDmirLO4RrR5++7Q=
+github.com/go-testfixtures/testfixtures/v3 v3.2.0/go.mod h1:RZctY24ixituGC73XlAV1gkCwYMVwiSwPm26MNlQIhE=
 github.com/golang-sql/civil v0.0.0-20190719163853-cb61b32ac6fe/go.mod h1:8vg3r2VgvsThLBIFL93Qb5yWzgyZWhEmBwUJWevAkK0=
 github.com/golang/protobuf v1.2.0/go.mod h1:6lQm79b+lXiMfvg/cZm0SGofjICqVBUtrP5yJMmIC1U=
 github.com/jmoiron/sqlx v1.2.0 h1:41Ip0zITnmWNR/vHV+S4m+VoUivnWY5E4OJfLZjCJMA=
