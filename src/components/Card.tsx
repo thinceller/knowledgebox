@@ -22,7 +22,7 @@ export const Card: React.FC<CardProps> = ({ title }) => {
   return (
     <Box>
       <Link href="/[title]" as={`/${title}`}>
-        <a>
+        <a style={{ textDecoration: 'none' }}>
           <MCard className={styles.card}>{title}</MCard>
         </a>
       </Link>

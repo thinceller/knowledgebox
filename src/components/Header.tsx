@@ -79,6 +79,9 @@ export const Header: React.FC = () => {
   const [input, updateInput] = React.useState<string>(
     (router.query?.q as string) || '',
   )
+  React.useEffect(() => {
+    updateInput(router.query.q as string)
+  }, [router.query.q])
 
   const handleInputChange = React.useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
