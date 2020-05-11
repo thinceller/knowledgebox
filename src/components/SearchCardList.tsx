@@ -7,6 +7,8 @@ import { MainContainer } from '../components/MainContainer'
 import { SearchCard } from './SearchCard'
 import { NewCard } from './NewCard'
 
+import { apiClient } from 'src/config/client'
+
 const useStyles = makeStyles({
   searchCardList: {
     paddingTop: 50,
@@ -14,19 +16,30 @@ const useStyles = makeStyles({
 })
 
 type SearchCardListProps = {
-  pages: Page[]
   query: string
 }
 
-export const SearchCardList: React.FC<SearchCardListProps> = ({
-  pages,
-  query,
-}) => {
+export const SearchCardList: React.FC<SearchCardListProps> = ({ query }) => {
   const styles = useStyles()
+
+  const [pages, updatePages] = React.useState<Page[]>([])
+
+  React.useEffect(() => {
+    async function fetchData(): Promise<void> {
+      if (!query) {
+        return
+      }
+      const response = await apiClient.get(`/search?q=${query}`)
+      const pages = (response.data as Page[]) || []
+      updatePages(pages)
+    }
+
+    fetchData()
+  }, [query, updatePages])
 
   return (
     <MainContainer>
-      {!pages.find(page => page.title === query) && (
+      {!pages.some(page => page.title === query) && (
         <List component="ul" className={styles.searchCardList}>
           <NewCard title={query} />
         </List>

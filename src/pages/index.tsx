@@ -5,7 +5,7 @@ import { Layout } from '../components/Layout'
 import { Page } from '../models/Page'
 import { Card } from '../components/Card'
 import { CardList } from '../components/CardList'
-import { apiClient } from '../config/client'
+import { apiClient } from 'src/config/client'
 
 type IndexProps = {
   pages: Page[]
