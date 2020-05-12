@@ -16,6 +16,7 @@
     "react": "^16.13.1",
     "react-contenteditable": "^3.3.4",
     "react-dom": "^16.13.1",
+    "react-string-replace": "^0.4.4",
     "use-immer": "^0.4.0"
   },
   "devDependencies": {
