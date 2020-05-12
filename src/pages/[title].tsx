@@ -3,23 +3,37 @@ import { NextPage, GetServerSideProps } from 'next'
 import Head from 'next/head'
 
 import { Layout } from '../components/Layout'
-import { Editor } from '../components/Editor'
 import { Page } from '../models/Page'
 import { apiClient } from '../config/client'
 import { createEmptyPage } from './new'
+import { PageView } from 'src/components/PageView'
+import { DraftEditor } from 'src/components/DraftEditor'
+import { MainContainer } from 'src/components/MainContainer'
 
 type PageProps = {
   page: Page
 }
 
 const PageDetail: NextPage<PageProps> = ({ page }) => {
+  const [isEditable, toggleIsEditable] = React.useState(false)
+
+  const toggleView = React.useCallback(() => {
+    toggleIsEditable(!isEditable)
+  }, [isEditable])
+
   return (
     <>
       <Head>
         <title>{page.title} - knowledgebox</title>
       </Head>
       <Layout>
-        <Editor pageData={page} />
+        <MainContainer>
+          {isEditable ? (
+            <DraftEditor page={page} toggleView={toggleView} />
+          ) : (
+            <PageView page={page} handleButtonClick={toggleView} />
+          )}
+        </MainContainer>
       </Layout>
     </>
   )

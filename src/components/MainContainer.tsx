@@ -4,7 +4,7 @@ import { makeStyles } from '@material-ui/core/styles'
 
 const useMainStyles = makeStyles({
   mainContainer: {
-    marginTop: 64,
+    marginTop: 100,
   },
 })
 

@@ -2,8 +2,9 @@ import React from 'react'
 import { NextPage } from 'next'
 
 import { Layout } from '../components/Layout'
-import { Editor } from '../components/Editor'
 import { Page } from '../models/Page'
+import { DraftEditor } from 'src/components/DraftEditor'
+import { MainContainer } from 'src/components/MainContainer'
 
 /* eslint-disable @typescript-eslint/camelcase */
 export const createEmptyPage = (): Page => ({
@@ -24,10 +25,16 @@ export const createEmptyPage = (): Page => ({
 })
 /* eslint-enable @typescript-eslint/camelcase */
 
-const New: NextPage = () => (
-  <Layout>
-    <Editor pageData={createEmptyPage()} />
-  </Layout>
-)
+const New: NextPage = () => {
+  const emptyPage = createEmptyPage()
+
+  return (
+    <Layout>
+      <MainContainer>
+        <DraftEditor page={emptyPage} />
+      </MainContainer>
+    </Layout>
+  )
+}
 
 export default New

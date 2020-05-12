@@ -403,6 +403,28 @@ func TestPageRepository_Save(t *testing.T) {
 			}},
 			wantErr: false,
 		},
+		{
+			name:   "Page の保存成功: 不要なLineの削除",
+			fields: fields{DB: db},
+			args: args{page: &domain.Page{
+				Id:    1,
+				Title: "testpage",
+				Lines: []*domain.Line{
+					{
+						Id:        1,
+						Body:      "testpage",
+						PageId:    1,
+						PageIndex: 0,
+					},
+					{
+						Body:      "new line",
+						PageId:    1,
+						PageIndex: 1,
+					},
+				},
+			}},
+			wantErr: false,
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -411,6 +433,13 @@ func TestPageRepository_Save(t *testing.T) {
 			}
 			if err := r.Save(tt.args.page); (err != nil) != tt.wantErr {
 				t.Errorf("PageRepository.Save() error = %v, wantErr %v", err, tt.wantErr)
+			}
+			got, err := r.GetByID(tt.args.page.Id)
+			if (err != nil) != tt.wantErr {
+				t.Errorf("PageRepository.Save() error = %v, wantErr %v", err, tt.wantErr)
+			}
+			if reflect.DeepEqual(got, tt.args.page) {
+				t.Errorf("PageRepository.Save() = %v, want %v", got, tt.args.page)
 			}
 		})
 	}
