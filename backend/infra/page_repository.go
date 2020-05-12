@@ -151,6 +151,26 @@ func (r *PageRepository) Save(page *domain.Page) error {
 		}
 	}
 
+	// 参照のなくなった Line を削除する
+	var lineIds []int
+	for _, line := range page.Lines {
+		lineIds = append(lineIds, line.Id)
+	}
+	arg := map[string]interface{}{
+		"pageId":  page.Id,
+		"lineIds": lineIds,
+	}
+	query, args, err := sqlx.Named(
+		"DELETE FROM line WHERE page_id=:pageId and not id IN (:lineIds)",
+		arg,
+	)
+	query, args, err = sqlx.In(query, args...)
+	if err != nil {
+		return err
+	}
+	query = tx.Rebind(query)
+	_ = tx.MustExec(query, args...)
+
 	if err := tx.Commit(); err != nil {
 		return err
 	}
