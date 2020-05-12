@@ -14,13 +14,7 @@ export const CardList: React.FC = ({ children }) => {
   const styles = useStyles()
   return (
     <MainContainer>
-      <Box
-        display="flex"
-        flexWrap="wrap"
-        p={1}
-        m={5}
-        className={styles.cardList}
-      >
+      <Box display="flex" flexWrap="wrap" p={1} className={styles.cardList}>
         {children}
       </Box>
     </MainContainer>
