@@ -36,9 +36,13 @@ const createNewLine = (pageId: number, pageIndex: number): Line => ({
 
 type EditorProps = {
   pageData: Page
+  handleSaveClick?: () => void
 }
 
-export const Editor: React.FC<EditorProps> = ({ pageData }) => {
+export const Editor: React.FC<EditorProps> = ({
+  pageData,
+  handleSaveClick: onClick,
+}) => {
   const styles = useStyles()
   const router = useRouter()
 
@@ -127,7 +131,9 @@ export const Editor: React.FC<EditorProps> = ({ pageData }) => {
     if (router.pathname === '/new' || router.pathname !== `/${page.title}`) {
       router.push('/[title]', `/${page.title}`)
     }
-  }, [page, router])
+
+    onClick()
+  }, [page, router, onClick])
 
   return (
     <MainContainer>

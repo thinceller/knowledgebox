@@ -1,9 +1,7 @@
 import React from 'react'
 import { useRouter } from 'next/router'
 import produce from 'immer'
-import { useImmer } from 'use-immer'
 import { Editor, EditorState, ContentState } from 'draft-js'
-import cloneDeep from 'lodash-es/cloneDeep'
 import Button from '@material-ui/core/Button'
 import Box from '@material-ui/core/Box'
 import Container from '@material-ui/core/Container'
@@ -40,42 +38,26 @@ const createNewLine = (pageId: number, pageIndex: number): Line => ({
 
 type DraftEditorProps = {
   page: Page
-  toggleView: () => void
+  toggleView?: () => void
 }
 
 export const DraftEditor: React.FC<DraftEditorProps> = ({
   page,
-  toggleView,
+  toggleView = function () {
+    return
+  },
 }) => {
   const styles = useStyles()
   const router = useRouter()
 
-  const [draft, updateDraft] = useImmer<Page>(cloneDeep(page))
   const [editorState, setEditorState] = React.useState(
     EditorState.createWithContent(
       ContentState.createFromText(
-        draft.lines.map(line => line.body).join(','),
+        page.lines.map(line => line.body).join(','),
         ',',
       ),
     ),
   )
-  // draft の中の lines を更新する処理
-  React.useEffect(() => {
-    const plainText = editorState.getCurrentContent().getPlainText()
-    const lines = plainText.split('\n')
-    console.log('body: ', lines)
-
-    updateDraft(draft => {
-      draft.title = lines[0]
-      lines.map((line, i) => {
-        if (draft.lines[i]) {
-          draft.lines[i].body = line
-        } else {
-          draft.lines.push(createNewLine(draft.id, i))
-        }
-      })
-    })
-  }, [editorState])
 
   const handleCancelClick = React.useCallback(() => {
     const yes = window.confirm('編集した内容は破棄されます。\nよろしいですか？')
@@ -109,7 +91,7 @@ export const DraftEditor: React.FC<DraftEditorProps> = ({
     if (!newPage.id) {
       await apiClient.post(`/pages`, newPage)
     } else {
-      await apiClient.put(`/pages/${draft.title}`, newPage)
+      await apiClient.put(`/pages/${newPage.title}`, newPage)
     }
 
     // 正常に通信が成功した場合、new page または title が変更されていれば
@@ -119,7 +101,7 @@ export const DraftEditor: React.FC<DraftEditorProps> = ({
     }
 
     toggleView()
-  }, [draft, toggleView, router])
+  }, [editorState, page, toggleView, router])
 
   const draftPage: Page = React.useMemo(() => {
     const plainText = editorState.getCurrentContent().getPlainText()
