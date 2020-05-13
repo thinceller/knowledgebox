@@ -1,6 +1,7 @@
 package api
 
 import (
+	"database/sql"
 	"net/http"
 
 	"github.com/labstack/echo/v4"
@@ -49,9 +50,14 @@ func (h *PageHandler) Get(c echo.Context) error {
 	page, err := h.repository.Get(title)
 	if err != nil {
 		var apierr APIError
-		apierr.Code = http.StatusInternalServerError
-		apierr.Message = err.Error()
-		c.JSON(http.StatusInternalServerError, apierr)
+		if err == sql.ErrNoRows {
+			apierr.Code = http.StatusNotFound
+			apierr.Message = "Not Found"
+		} else {
+			apierr.Code = http.StatusInternalServerError
+			apierr.Message = err.Error()
+		}
+		c.JSON(apierr.Code, apierr)
 		return err
 	}
 
