@@ -21,22 +21,19 @@ export default (req: NextApiRequest, res: NextApiResponse) => {
         .get(url)
         .then(response => {
           res.status(response.status).json(response.data)
-          return
         })
         .catch(error => {
           if (!error.response) {
-            res.status(500).json(error)
+            return res.status(500).json(error)
           }
 
           const { response } = error as AxiosError
           // 404 のときだけは正常な動作であるため 空のページを生成して返すようにする
           if (response.status === 400) {
-            res.status(200).json(createEmptyPage())
-            return
+            return res.status(200).json(createEmptyPage())
           }
 
           res.status(error.response.status).json(error.response.data)
-          return
         })
       return
     }
