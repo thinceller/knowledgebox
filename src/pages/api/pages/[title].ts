@@ -8,12 +8,13 @@ const path = '/pages'
 
 export default (req: NextApiRequest, res: NextApiResponse) => {
   const {
-    query: { title },
     // body,
     method,
   } = req
 
-  const url = `${path}/${encodeURI(String(title))}`
+  const title = req.query.title as string
+
+  const url = `${path}/${encodeURI(title)}`
 
   switch (method) {
     case 'GET': {
@@ -29,8 +30,11 @@ export default (req: NextApiRequest, res: NextApiResponse) => {
 
           const { response } = error as AxiosError
           // 404 のときだけは正常な動作であるため 空のページを生成して返すようにする
-          if (response.status === 400) {
-            return res.status(200).json(createEmptyPage())
+          if (response.status === 404) {
+            const page = createEmptyPage()
+            page.title = title
+            page.lines[0].body = title
+            return res.status(200).json(page)
           }
 
           res.status(error.response.status).json(error.response.data)
