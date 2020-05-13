@@ -1,59 +1,45 @@
 import React from 'react'
-import { NextPage, GetServerSideProps } from 'next'
+import { NextPage } from 'next'
+import { useRouter } from 'next/router'
 import Head from 'next/head'
 
 import { Layout } from '../components/Layout'
-import { Page } from '../models/Page'
-import { apiClient } from '../config/client'
-import { createEmptyPage } from './new'
 import { PageView } from 'src/components/PageView'
 import { DraftEditor } from 'src/components/DraftEditor'
 import { MainContainer } from 'src/components/MainContainer'
+import { usePage, mutatePage } from 'src/hooks/usePage'
 
-type PageProps = {
-  page: Page
-}
+const PageDetail: NextPage = () => {
+  const router = useRouter()
+  const title = router.query.title as string
 
-const PageDetail: NextPage<PageProps> = ({ page }) => {
+  const { data: page } = usePage(title)
+
   const [isEditable, toggleIsEditable] = React.useState(false)
 
   const toggleView = React.useCallback(() => {
+    mutatePage(title)
     toggleIsEditable(!isEditable)
-  }, [isEditable])
+  }, [title, isEditable])
 
   return (
     <>
       <Head>
-        <title>{page.title} - knowledgebox</title>
+        <title>{title} - knowledgebox</title>
       </Head>
       <Layout>
-        <MainContainer>
-          {isEditable ? (
-            <DraftEditor page={page} toggleView={toggleView} />
-          ) : (
-            <PageView page={page} handleButtonClick={toggleView} />
-          )}
-        </MainContainer>
+        {page && (
+          <MainContainer>
+            {isEditable ? (
+              <DraftEditor page={page} toggleView={toggleView} />
+            ) : (
+              <PageView page={page} handleButtonClick={toggleView} />
+            )}
+          </MainContainer>
+        )}
       </Layout>
     </>
   )
-}
-
-export const getServerSideProps: GetServerSideProps = async ({ params }) => {
-  const title = params.title as string
-  let page: Page
-  try {
-    // page 用に最適化したい
-    const response = await apiClient.get(`/pages/${title}`)
-    page = response.data
-  } catch (error) {
-    // TODO: title が存在しない場合とそうでないエラーで分岐する
-    page = createEmptyPage()
-    page.title = title
-    page.lines[0].body = title
-  }
-
-  return { props: { page } }
 }
 
 export default PageDetail
