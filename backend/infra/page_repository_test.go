@@ -71,6 +71,63 @@ func TestNewPageRepository(t *testing.T) {
 	}
 }
 
+func TestExtractLinksFromPage(t *testing.T) {
+	type args struct {
+		page *domain.Page
+	}
+	tests := []struct {
+		name string
+		args args
+		want []string
+	}{
+		{
+			name: "success",
+			args: args{
+				page: &domain.Page{
+					Lines: []*domain.Line{
+						{
+							Body: "hoge",
+						},
+						{
+							Body: "hoge [fuga] [fuga]",
+						},
+					},
+				},
+			},
+			want: []string{"fuga"},
+		},
+		{
+			name: "success: nothing",
+			args: args{
+				page: &domain.Page{
+					Lines: []*domain.Line{
+						{
+							Body: "hoge",
+						},
+						{
+							Body: "",
+						},
+						{
+							Body: "https://localhost:3000",
+						},
+						{
+							Body: "http://localhost:3000",
+						},
+					},
+				},
+			},
+			want: nil,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := ExtractLinksFromPage(tt.args.page); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("got %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
 func TestPageRepository_All(t *testing.T) {
 	prepareTestDatabase()
 
@@ -135,13 +192,14 @@ func TestPageRepository_All(t *testing.T) {
 						},
 						{
 							Id:        5,
-							Body:      "second line",
+							Body:      "[testpage]",
 							PageId:    2,
 							PageIndex: 2,
 							CreatedAt: &targetTime,
 							UpdatedAt: &targetTime,
 						},
 					},
+					Links: []string{"testpage"},
 				},
 			},
 			wantErr: false,
@@ -159,6 +217,9 @@ func TestPageRepository_All(t *testing.T) {
 			}
 			if !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("PageRepository.All() = %v, want %v", got, tt.want)
+				for i := range []int{0, 0} {
+					t.Errorf("got links: %v, want links: %v", got[i].Links, tt.want[i].Links)
+				}
 			}
 		})
 	}
@@ -481,7 +542,7 @@ func TestPageRepository_Delete(t *testing.T) {
 					},
 					{
 						Id:        5,
-						Body:      "second line",
+						Body:      "[testpage]",
 						PageId:    2,
 						PageIndex: 2,
 					},
@@ -571,13 +632,14 @@ func TestPageRepository_Search(t *testing.T) {
 						},
 						{
 							Id:        5,
-							Body:      "second line",
+							Body:      "[testpage]",
 							PageId:    2,
 							PageIndex: 2,
 							CreatedAt: &targetTime,
 							UpdatedAt: &targetTime,
 						},
 					},
+					Links: []string{"testpage"},
 				},
 			},
 			wantErr: false,
@@ -611,13 +673,14 @@ func TestPageRepository_Search(t *testing.T) {
 						},
 						{
 							Id:        5,
-							Body:      "second line",
+							Body:      "[testpage]",
 							PageId:    2,
 							PageIndex: 2,
 							CreatedAt: &targetTime,
 							UpdatedAt: &targetTime,
 						},
 					},
+					Links: []string{"testpage"},
 				},
 			},
 			wantErr: false,
