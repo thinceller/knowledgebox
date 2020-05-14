@@ -59,7 +59,6 @@ func extractLinksFromLine(lines []string) <-chan string {
 		defer close(ch)
 
 		var wg1 sync.WaitGroup
-		var wg2 sync.WaitGroup
 		for _, line := range lines {
 			wg1.Add(1)
 			go func(l string) {
@@ -69,17 +68,12 @@ func extractLinksFromLine(lines []string) <-chan string {
 					return
 				}
 				for _, r := range result {
-					wg2.Add(1)
-					go func(str []string) {
-						defer wg2.Done()
-						if strings.HasPrefix(str[1], "https://") || strings.HasPrefix(str[1], "http://") {
-							return
-						}
-						ch <- str[1]
-					}(r)
+					if strings.HasPrefix(r[1], "https://") || strings.HasPrefix(r[1], "http://") {
+						return
+					}
+					ch <- r[1]
 				}
 
-				wg2.Wait()
 			}(line)
 		}
 
