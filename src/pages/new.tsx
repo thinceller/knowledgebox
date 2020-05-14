@@ -22,6 +22,7 @@ export const createEmptyPage = (): Page => ({
       updated_at: null,
     },
   ],
+  links: null,
 })
 /* eslint-enable @typescript-eslint/camelcase */
 

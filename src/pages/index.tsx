@@ -1,31 +1,25 @@
 import React from 'react'
-import { NextPage, GetServerSideProps } from 'next'
+import { NextPage } from 'next'
 
 import { Layout } from '../components/Layout'
-import { Page } from '../models/Page'
 import { Card } from '../components/Card'
 import { CardList } from '../components/CardList'
-import { apiClient } from 'src/config/client'
+import { useTitles } from 'src/hooks/usePages'
+import { MainContainer } from 'src/components/MainContainer'
 
-type IndexProps = {
-  pages: Page[]
-}
+const Index: NextPage = () => {
+  const { data: titles } = useTitles()
 
-const Index: NextPage<IndexProps> = ({ pages }) => (
-  <Layout>
-    <CardList>
-      {pages.map(page => (
-        <Card key={page.id} title={page.title} />
-      ))}
-    </CardList>
-  </Layout>
-)
-
-export const getServerSideProps: GetServerSideProps = async () => {
-  const res = await apiClient.get('/pages')
-  const pages = res.data
-
-  return { props: { pages } }
+  return (
+    <Layout>
+      <MainContainer>
+        <CardList>
+          {titles &&
+            titles.map(title => <Card key={title.id} title={title.title} />)}
+        </CardList>
+      </MainContainer>
+    </Layout>
+  )
 }
 
 export default Index

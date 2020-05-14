@@ -32,6 +32,27 @@ func NewPageHandler(repo domain.PageRepository) *PageHandler {
 	}
 }
 
+type Title struct {
+	Id    int      `json:"id"`
+	Title string   `json:"title"`
+	Links []string `json:"links"`
+}
+
+type Titles []Title
+
+func NewTitles(pages domain.Pages) Titles {
+	var titles Titles
+	for _, page := range pages {
+		title := Title{
+			Id:    page.Id,
+			Title: page.Title,
+			Links: page.Links,
+		}
+		titles = append(titles, title)
+	}
+	return titles
+}
+
 func (h *PageHandler) Index(c echo.Context) error {
 	pages, err := h.repository.All()
 	if err != nil {
@@ -41,8 +62,9 @@ func (h *PageHandler) Index(c echo.Context) error {
 		c.JSON(http.StatusInternalServerError, apierr)
 		return err
 	}
+	titles := NewTitles(pages)
 
-	return c.JSON(http.StatusOK, pages)
+	return c.JSON(http.StatusOK, titles)
 }
 
 func (h *PageHandler) Get(c echo.Context) error {
