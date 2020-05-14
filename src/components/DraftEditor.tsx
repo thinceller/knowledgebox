@@ -119,6 +119,7 @@ export const DraftEditor: React.FC<DraftEditorProps> = ({
       created_at: page.created_at,
       updated_at: page.updated_at,
       lines: newLines,
+      links: null,
     }
   }, [page, editorState])
 
