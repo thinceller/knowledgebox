@@ -6,7 +6,10 @@ export type Page = {
   created_at: Date
   updated_at: Date
   lines: Line[]
+  links: string[] | null
 }
+
+export type Title = Pick<Page, 'id' | 'title' | 'links'>
 
 /* eslint-disable @typescript-eslint/camelcase */
 export const createEmptyPage = (): Page => ({
@@ -24,5 +27,6 @@ export const createEmptyPage = (): Page => ({
       updated_at: null,
     },
   ],
+  links: null,
 })
 /* eslint-enable @typescript-eslint/camelcase */
