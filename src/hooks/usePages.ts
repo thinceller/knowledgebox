@@ -1,6 +1,6 @@
-import { Page } from 'src/models/Page'
+import { Title } from 'src/models/Page'
 import { useRequest } from './useRequest'
 
-export function usePages() {
-  return useRequest<Page[]>({ url: '/api/pages' })
+export function useTitles() {
+  return useRequest<Title[]>({ url: '/api/pages' })
 }
