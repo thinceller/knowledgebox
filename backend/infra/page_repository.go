@@ -4,11 +4,16 @@ import (
 	"database/sql"
 	"fmt"
 	"log"
+	"regexp"
+	"strings"
+	"sync"
 
 	"github.com/jmoiron/sqlx"
 
 	"github.com/thinceller/knowledgebox/backend/domain"
 )
+
+var linkRe = regexp.MustCompile(`\[([^[]*)\]`)
 
 type PageRepository struct {
 	DB *sqlx.DB
@@ -16,6 +21,72 @@ type PageRepository struct {
 
 func NewPageRepository(db *sqlx.DB) domain.PageRepository {
 	return &PageRepository{DB: db}
+}
+
+func ExtractLinksFromPage(page *domain.Page) []string {
+	var links []string
+	var bodyList []string
+
+	for _, line := range page.Lines {
+		bodyList = append(bodyList, line.Body)
+	}
+
+	ch := extractLinksFromLine(bodyList)
+
+	for link := range ch {
+		if contains(links, link) {
+			break
+		}
+		links = append(links, link)
+	}
+
+	return links
+}
+
+func contains(slice []string, s string) bool {
+	for _, v := range slice {
+		if v == s {
+			return true
+		}
+	}
+	return false
+}
+
+func extractLinksFromLine(lines []string) <-chan string {
+	ch := make(chan string, 3)
+
+	go func() {
+		defer close(ch)
+
+		var wg1 sync.WaitGroup
+		var wg2 sync.WaitGroup
+		for _, line := range lines {
+			wg1.Add(1)
+			go func(l string) {
+				defer wg1.Done()
+				result := linkRe.FindAllStringSubmatch(l, -1)
+				if len(result) == 0 {
+					return
+				}
+				for _, r := range result {
+					wg2.Add(1)
+					go func(str []string) {
+						defer wg2.Done()
+						if strings.HasPrefix(str[1], "https://") || strings.HasPrefix(str[1], "http://") {
+							return
+						}
+						ch <- str[1]
+					}(r)
+				}
+
+				wg2.Wait()
+			}(line)
+		}
+
+		wg1.Wait()
+	}()
+
+	return ch
 }
 
 func (r *PageRepository) All() (domain.Pages, error) {
@@ -33,6 +104,9 @@ func (r *PageRepository) All() (domain.Pages, error) {
 		); err != nil {
 			return nil, err
 		}
+
+		links := ExtractLinksFromPage(p)
+		p.Links = links
 	}
 
 	return pages, nil
@@ -50,6 +124,9 @@ func (r *PageRepository) Get(title string) (*domain.Page, error) {
 		return nil, err
 	}
 
+	links := ExtractLinksFromPage(&page)
+	page.Links = links
+
 	return &page, nil
 }
 
@@ -64,6 +141,9 @@ func (r *PageRepository) GetByID(id int) (*domain.Page, error) {
 	); err != nil {
 		return nil, err
 	}
+
+	links := ExtractLinksFromPage(&page)
+	page.Links = links
 
 	return &page, nil
 }
