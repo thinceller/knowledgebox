@@ -16,15 +16,19 @@ const useStyles = makeStyles({
 
 type CardProps = {
   title: string
+  handleMouseEnter?: (e: React.MouseEvent<HTMLElement>) => void
 }
 
-export const Card: React.FC<CardProps> = ({ title }) => {
+export const Card: React.FC<CardProps> = ({
+  title,
+  handleMouseEnter = undefined,
+}) => {
   const styles = useStyles()
 
   return (
     <Box>
       <Link href="/[title]" as={`/${title}`}>
-        <a style={{ textDecoration: 'none' }}>
+        <a style={{ textDecoration: 'none' }} onMouseEnter={handleMouseEnter}>
           <MCard className={styles.card}>{title}</MCard>
         </a>
       </Link>
