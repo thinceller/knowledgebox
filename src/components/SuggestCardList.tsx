@@ -4,6 +4,7 @@ import { CardList } from './CardList'
 import { Card } from './Card'
 import { Container } from '@material-ui/core'
 import { Title } from 'src/models/Page'
+import { prefetchPage } from 'src/hooks/usePage'
 
 type SuggestCardListProps = {
   links: string[]
@@ -68,6 +69,13 @@ export const SuggestCardList: React.FC<SuggestCardListProps> = ({
       .filter(d => d)
   }, [links, titles, ownTitle])
 
+  const handleMouseEnter = React.useCallback(
+    (e: React.MouseEvent<HTMLElement>) => {
+      prefetchPage(e.currentTarget.getAttribute('href').replace('/', ''))
+    },
+    [],
+  )
+
   return (
     <Container>
       {!!linkList.length && (
@@ -75,7 +83,11 @@ export const SuggestCardList: React.FC<SuggestCardListProps> = ({
           <span>link</span>
           <CardList>
             {linkList.map(link => (
-              <Card key={link} title={link} />
+              <Card
+                key={link}
+                title={link}
+                handleMouseEnter={handleMouseEnter}
+              />
             ))}
           </CardList>
         </>
@@ -86,7 +98,11 @@ export const SuggestCardList: React.FC<SuggestCardListProps> = ({
             <span>{data.link}</span>
             <CardList>
               {data.list.map(link => (
-                <Card key={link} title={link} />
+                <Card
+                  key={link}
+                  title={link}
+                  handleMouseEnter={handleMouseEnter}
+                />
               ))}
             </CardList>
           </React.Fragment>
@@ -96,7 +112,11 @@ export const SuggestCardList: React.FC<SuggestCardListProps> = ({
           <span>New link</span>
           <CardList>
             {notExistLinkList.map(link => (
-              <Card key={link} title={link} />
+              <Card
+                key={link}
+                title={link}
+                handleMouseEnter={handleMouseEnter}
+              />
             ))}
           </CardList>
         </>

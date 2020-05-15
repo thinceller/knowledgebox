@@ -8,7 +8,7 @@ import { PageView } from 'src/components/PageView'
 import { DraftEditor } from 'src/components/DraftEditor'
 import { MainContainer } from 'src/components/MainContainer'
 import { usePage, mutatePage } from 'src/hooks/usePage'
-import { useTitles } from 'src/hooks/usePages'
+import { useTitles, mutateTitles } from 'src/hooks/usePages'
 import { SuggestCardList } from 'src/components/SuggestCardList'
 
 const PageDetail: NextPage = () => {
@@ -22,6 +22,7 @@ const PageDetail: NextPage = () => {
 
   const toggleView = React.useCallback(() => {
     mutatePage(title)
+    mutateTitles()
     toggleIsEditable(!isEditable)
   }, [title, isEditable])
 

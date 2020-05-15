@@ -28,6 +28,9 @@ func ExtractLinksFromPage(page *domain.Page) []string {
 	var bodyList []string
 
 	for _, line := range page.Lines {
+		if line.PageIndex == 0 {
+			continue
+		}
 		bodyList = append(bodyList, line.Body)
 	}
 
@@ -85,15 +88,16 @@ func extractLinksFromLine(lines []string) <-chan string {
 
 func (r *PageRepository) All() (domain.Pages, error) {
 	var pages domain.Pages
-	if err := r.DB.Select(&pages, "SELECT * FROM page ORDER BY updated_at DESC"); err != nil {
+	if err := r.DB.Select(&pages, "SELECT id, title FROM page ORDER BY updated_at DESC"); err != nil {
 		return nil, err
 	}
 
 	// TODO: N+1問題解消
+	// All()ではlineの情報は必要なく、bodyさえあればlinkの抽出が可能なためbodyのみselectする
 	for _, p := range pages {
 		if err := r.DB.Select(
 			&p.Lines,
-			"SELECT * FROM line WHERE line.page_id = ? ORDER BY page_index",
+			"SELECT body,page_index FROM line WHERE line.page_id = ? AND NOT line.page_index = 0 AND NOT line.body = '' ORDER BY page_index",
 			p.Id,
 		); err != nil {
 			return nil, err
