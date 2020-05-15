@@ -86,10 +86,16 @@ func TestExtractLinksFromPage(t *testing.T) {
 				page: &domain.Page{
 					Lines: []*domain.Line{
 						{
-							Body: "hoge",
+							Body:      "[title]",
+							PageIndex: 0,
 						},
 						{
-							Body: "hoge [fuga] [fuga]",
+							Body:      "hoge",
+							PageIndex: 1,
+						},
+						{
+							Body:      "hoge [fuga] [fuga]",
+							PageIndex: 2,
 						},
 					},
 				},
@@ -102,16 +108,20 @@ func TestExtractLinksFromPage(t *testing.T) {
 				page: &domain.Page{
 					Lines: []*domain.Line{
 						{
-							Body: "hoge",
+							Body:      "hoge",
+							PageIndex: 0,
 						},
 						{
-							Body: "",
+							Body:      "",
+							PageIndex: 1,
 						},
 						{
-							Body: "https://localhost:3000",
+							Body:      "https://localhost:3000",
+							PageIndex: 2,
 						},
 						{
-							Body: "http://localhost:3000",
+							Body:      "[http://localhost:3000]",
+							PageIndex: 3,
 						},
 					},
 				},
@@ -145,58 +155,20 @@ func TestPageRepository_All(t *testing.T) {
 			fields: fields{DB: db},
 			want: domain.Pages{
 				{
-					Id:        1,
-					Title:     "testpage",
-					CreatedAt: &targetTime,
-					UpdatedAt: &targetTime,
-					Lines: []*domain.Line{
-						{
-							Id:        1,
-							Body:      "testpage",
-							PageId:    1,
-							PageIndex: 0,
-							CreatedAt: &targetTime,
-							UpdatedAt: &targetTime,
-						},
-						{
-							Id:        2,
-							Body:      "",
-							PageId:    1,
-							PageIndex: 1,
-							CreatedAt: &targetTime,
-							UpdatedAt: &targetTime,
-						},
-					},
+					Id:    1,
+					Title: "testpage",
 				},
 				{
-					Id:        2,
-					Title:     "testpage_2",
-					CreatedAt: &targetTime,
-					UpdatedAt: &targetTime,
+					Id:    2,
+					Title: "testpage_2",
 					Lines: []*domain.Line{
 						{
-							Id:        3,
-							Body:      "testpage_2",
-							PageId:    2,
-							PageIndex: 0,
-							CreatedAt: &targetTime,
-							UpdatedAt: &targetTime,
-						},
-						{
-							Id:        4,
 							Body:      "first line",
-							PageId:    2,
 							PageIndex: 1,
-							CreatedAt: &targetTime,
-							UpdatedAt: &targetTime,
 						},
 						{
-							Id:        5,
 							Body:      "[testpage]",
-							PageId:    2,
 							PageIndex: 2,
-							CreatedAt: &targetTime,
-							UpdatedAt: &targetTime,
 						},
 					},
 					Links: []string{"testpage"},
