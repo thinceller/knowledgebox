@@ -7,6 +7,7 @@ import MCard from '@material-ui/core/Card'
 const useStyles = makeStyles({
   card: {
     margin: 10,
+    paddingTop: 5,
     minWidth: 150,
     minHeight: 150,
     textAlign: 'center',
@@ -19,6 +20,7 @@ type CardProps = {
 
 export const Card: React.FC<CardProps> = ({ title }) => {
   const styles = useStyles()
+
   return (
     <Box>
       <Link href="/[title]" as={`/${title}`}>
