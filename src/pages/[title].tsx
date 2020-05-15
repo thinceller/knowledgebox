@@ -29,6 +29,7 @@ const PageDetail: NextPage = () => {
     <>
       <Head>
         <title>{title} - knowledgebox</title>
+        <link rel="preload" href={`/api/pages/${title}`} as="fetch" />
       </Head>
       <Layout>
         {page && (
