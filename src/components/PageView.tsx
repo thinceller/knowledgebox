@@ -20,7 +20,7 @@ type PageViewProps = {
 const useStyles = makeStyles({
   main: {
     background: 'white',
-    paddingLeft: 10,
+    padding: '10px 20px',
   },
   button: {
     marginLeft: 20,

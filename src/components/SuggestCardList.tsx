@@ -1,8 +1,8 @@
 import React from 'react'
+import Container from '@material-ui/core/Container'
 
 import { CardList } from './CardList'
-import { Card } from './Card'
-import { Container } from '@material-ui/core'
+import { Card, LinkCard, NewLinkCard, ExistLinkCard } from './Card'
 import { Title } from 'src/models/Page'
 import { prefetchPage } from 'src/hooks/usePage'
 
@@ -39,16 +39,6 @@ export const SuggestCardList: React.FC<SuggestCardListProps> = ({
     return [...existLinkList, ...linkedList]
   }, [links, titles, ownTitle])
 
-  const notExistLinkList = React.useMemo(() => {
-    if (!links?.length) {
-      return []
-    }
-
-    return links.filter(link => {
-      return !titles.map(title => title.title).includes(link)
-    })
-  }, [links, titles])
-
   // titlesに存在するページのうち、ownPageがもつリンクへのリンクをもっているもの
   const otherLinks = React.useMemo(() => {
     if (!links?.length || !titles?.length) {
@@ -69,6 +59,20 @@ export const SuggestCardList: React.FC<SuggestCardListProps> = ({
       .filter(d => d)
   }, [links, titles, ownTitle])
 
+  const notExistLinkList = React.useMemo(() => {
+    if (!links?.length) {
+      return []
+    }
+
+    return links
+      .filter(link => {
+        return !titles.map(title => title.title).includes(link)
+      })
+      .filter(link => {
+        return !otherLinks.map(links => links.link).includes(link)
+      })
+  }, [links, titles, otherLinks])
+
   const handleMouseEnter = React.useCallback(
     (e: React.MouseEvent<HTMLElement>) => {
       prefetchPage(e.currentTarget.getAttribute('href').replace('/', ''))
@@ -79,39 +83,21 @@ export const SuggestCardList: React.FC<SuggestCardListProps> = ({
   return (
     <Container>
       {!!linkList.length && (
-        <>
-          <span>link</span>
-          <CardList>
-            {linkList.map(link => (
-              <Card
-                key={link}
-                title={link}
-                handleMouseEnter={handleMouseEnter}
-              />
-            ))}
-          </CardList>
-        </>
+        <CardList>
+          <LinkCard />
+          {linkList.map(link => (
+            <Card key={link} title={link} handleMouseEnter={handleMouseEnter} />
+          ))}
+        </CardList>
       )}
       {!!otherLinks.length &&
         otherLinks.map(data => (
-          <React.Fragment key={`otherLink${data.link}`}>
-            <span>{data.link}</span>
-            <CardList>
-              {data.list.map(link => (
-                <Card
-                  key={link}
-                  title={link}
-                  handleMouseEnter={handleMouseEnter}
-                />
-              ))}
-            </CardList>
-          </React.Fragment>
-        ))}
-      {!!notExistLinkList.length && (
-        <>
-          <span>New link</span>
-          <CardList>
-            {notExistLinkList.map(link => (
+          <CardList key={`otherLink${data.link}`}>
+            <ExistLinkCard
+              title={data.link}
+              handleMouseEnter={handleMouseEnter}
+            />
+            {data.list.map(link => (
               <Card
                 key={link}
                 title={link}
@@ -119,7 +105,14 @@ export const SuggestCardList: React.FC<SuggestCardListProps> = ({
               />
             ))}
           </CardList>
-        </>
+        ))}
+      {!!notExistLinkList.length && (
+        <CardList>
+          <NewLinkCard />
+          {notExistLinkList.map(link => (
+            <Card key={link} title={link} handleMouseEnter={handleMouseEnter} />
+          ))}
+        </CardList>
       )}
     </Container>
   )
