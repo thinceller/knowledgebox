@@ -6,6 +6,8 @@ import Button from '@material-ui/core/Button'
 import Box from '@material-ui/core/Box'
 import Container from '@material-ui/core/Container'
 import { makeStyles } from '@material-ui/core/styles'
+import SaveIcon from '@material-ui/icons/Save'
+import CancelIcon from '@material-ui/icons/Cancel'
 
 import { Page } from 'src/models/Page'
 import { PageView } from './PageView'
@@ -143,7 +145,6 @@ export const DraftEditor: React.FC<DraftEditorProps> = ({
           <Editor editorState={editorState} onChange={setEditorState} />
         </Container>
         <Container style={{ width: '50%', display: 'inline-block' }}>
-          <h2>【Preview】</h2>
           <PageView isPreview page={draftPage} />
         </Container>
       </Container>
@@ -157,6 +158,7 @@ export const DraftEditor: React.FC<DraftEditorProps> = ({
           size="medium"
           onClick={handleCancelClick}
           className={styles.button}
+          startIcon={<CancelIcon />}
         >
           Cancel
         </Button>
@@ -166,6 +168,7 @@ export const DraftEditor: React.FC<DraftEditorProps> = ({
           size="medium"
           onClick={handleSaveClick}
           className={styles.button}
+          startIcon={<SaveIcon />}
         >
           Save
         </Button>
