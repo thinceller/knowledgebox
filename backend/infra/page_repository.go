@@ -2,7 +2,6 @@ package infra
 
 import (
 	"database/sql"
-	"fmt"
 	"log"
 	"regexp"
 	"strings"
@@ -14,6 +13,8 @@ import (
 )
 
 var linkRe = regexp.MustCompile(`\[([^[]*)\]`)
+var tagRe = regexp.MustCompile(`^#(\S+)`)
+var tagRe_1 = regexp.MustCompile(`\s#(\S+)`)
 
 type PageRepository struct {
 	DB *sqlx.DB
@@ -38,7 +39,7 @@ func ExtractLinksFromPage(page *domain.Page) []string {
 
 	for link := range ch {
 		if contains(links, link) {
-			break
+			continue
 		}
 		links = append(links, link)
 	}
@@ -61,18 +62,28 @@ func extractLinksFromLine(lines []string) <-chan string {
 	go func() {
 		defer close(ch)
 
-		var wg1 sync.WaitGroup
+		var wg sync.WaitGroup
 		for _, line := range lines {
-			wg1.Add(1)
+			wg.Add(1)
 			go func(l string) {
-				defer wg1.Done()
+				defer wg.Done()
+
 				result := linkRe.FindAllStringSubmatch(l, -1)
+				tagResult := tagRe.FindAllStringSubmatch(l, -1)
+				tag1Result := tagRe_1.FindAllStringSubmatch(l, -1)
+				if len(tagResult) != 0 {
+					result = append(result, tagResult...)
+				}
+				if len(tag1Result) != 0 {
+					result = append(result, tag1Result...)
+				}
+
 				if len(result) == 0 {
 					return
 				}
 				for _, r := range result {
 					if strings.HasPrefix(r[1], "https://") || strings.HasPrefix(r[1], "http://") {
-						return
+						continue
 					}
 					ch <- r[1]
 				}
@@ -80,7 +91,7 @@ func extractLinksFromLine(lines []string) <-chan string {
 			}(line)
 		}
 
-		wg1.Wait()
+		wg.Wait()
 	}()
 
 	return ch
@@ -288,7 +299,6 @@ func (r *PageRepository) Search(query string) (domain.Pages, error) {
 	); err != nil {
 		return nil, err
 	}
-	fmt.Println(pageIds)
 	if len(pageIds) == 0 {
 		// TODO: 404 返したい
 		return nil, nil

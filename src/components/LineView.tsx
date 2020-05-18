@@ -25,6 +25,8 @@ const OUTER_LINK_TAG_REGEXP_1 = /\[(https?:\/\/[^\[\]\s]+)\]/g
 // const OUTER_LINK_TAG_REGEXP_3 = /\[([^\[\]]+)\s(https?:\/\/[^\[\]]+)\]/g
 const LINK_REGEXP = /(https?:\/\/\S+)/g
 const LINK_TAG_REGEXP = /\[([^\[\]]*)\]/g
+const LINK_HASH_TAG_REGEXP = /^#(\S+)/g
+const LINK_HASH_TAG_REGEXP_2 = /\s#(\S+)/g
 const LIST_REGEXP = /^(\s{1})/g
 
 export const LineView: React.FC<LineViewProps> = ({ line }) => {
@@ -62,6 +64,28 @@ export const LineView: React.FC<LineViewProps> = ({ line }) => {
       return (
         <Link href="/[title]" as={`/${match}`} key={match + i}>
           <a>{match}</a>
+        </Link>
+      )
+    },
+  )
+  replacedText = reactStringReplace(
+    replacedText,
+    LINK_HASH_TAG_REGEXP,
+    (match, i) => {
+      return (
+        <Link href="/[title]" as={`/${match}`} key={match + i}>
+          <a>#{match}</a>
+        </Link>
+      )
+    },
+  )
+  replacedText = reactStringReplace(
+    replacedText,
+    LINK_HASH_TAG_REGEXP_2,
+    (match, i) => {
+      return (
+        <Link href="/[title]" as={`/${match}`} key={match + i}>
+          <a> #{match}</a>
         </Link>
       )
     },
