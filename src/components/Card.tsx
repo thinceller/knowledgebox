@@ -10,29 +10,33 @@ const useStyles = makeStyles({
   card: {
     margin: 10,
     paddingTop: 5,
-    minWidth: 150,
-    minHeight: 150,
+    width: 150,
+    height: 150,
     textAlign: 'left',
+  },
+  cardContent: {
+    textOverflow: 'ellipsis',
+    overflow: 'hidden',
   },
   linkCard: {
     margin: 10,
     paddingTop: 5,
-    minWidth: 150,
-    minHeight: 150,
+    width: 150,
+    height: 150,
     color: 'skyblue',
   },
   existLinkCard: {
     margin: 10,
     paddingTop: 5,
-    minWidth: 150,
-    minHeight: 150,
+    width: 150,
+    height: 150,
     color: 'gray',
   },
   newLinkCard: {
     margin: 10,
     paddingTop: 5,
-    minWidth: 150,
-    minHeight: 150,
+    width: 150,
+    height: 150,
     color: 'red',
   },
 })
@@ -53,7 +57,7 @@ export const Card: React.FC<CardProps> = ({
       <Link href="/[title]" as={`/${title}`}>
         <a style={{ textDecoration: 'none' }} onMouseEnter={handleMouseEnter}>
           <MCard className={styles.card}>
-            <CardContent>
+            <CardContent className={styles.cardContent}>
               <span>{title}</span>
             </CardContent>
           </MCard>
