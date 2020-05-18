@@ -12,13 +12,12 @@ import { prefetchPage } from 'src/hooks/usePage'
 const Index: NextPage = () => {
   const { data: titles } = useTitles()
 
-  React.useEffect(() => {
-    if (!titles) return
-    if (titles.length === 0) return
-    titles.forEach(title => {
-      prefetchPage(title.title)
-    })
-  }, [titles])
+  const handleMouseEnter = React.useCallback(
+    (e: React.MouseEvent<HTMLElement>) => {
+      prefetchPage(e.currentTarget.getAttribute('href').replace('/', ''))
+    },
+    [],
+  )
 
   return (
     <>
@@ -29,7 +28,13 @@ const Index: NextPage = () => {
         <MainContainer>
           <CardList>
             {titles &&
-              titles.map(title => <Card key={title.id} title={title.title} />)}
+              titles.map(title => (
+                <Card
+                  key={title.id}
+                  title={title.title}
+                  handleMouseEnter={handleMouseEnter}
+                />
+              ))}
           </CardList>
         </MainContainer>
       </Layout>

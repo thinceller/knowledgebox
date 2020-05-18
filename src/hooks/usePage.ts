@@ -14,8 +14,13 @@ export function mutatePage(title: string) {
 
 export async function prefetchPage(title: string) {
   const request = { url: `/api/pages/${title}` }
-  return axios(request).then(data => {
-    mutate(JSON.stringify(request), data, false)
-    return data
-  })
+  mutate(
+    JSON.stringify(request),
+    async page => {
+      if (page) return page
+
+      return axios(request)
+    },
+    false,
+  )
 }
