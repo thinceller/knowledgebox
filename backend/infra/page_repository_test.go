@@ -3,6 +3,7 @@ package infra
 import (
 	"os"
 	"reflect"
+	"sort"
 	"testing"
 	"time"
 
@@ -94,13 +95,21 @@ func TestExtractLinksFromPage(t *testing.T) {
 							PageIndex: 1,
 						},
 						{
-							Body:      "hoge [fuga] [fuga]",
+							Body:      "hoge [fuga] [fuga] #tag",
 							PageIndex: 2,
+						},
+						{
+							Body:      "#tag1",
+							PageIndex: 3,
+						},
+						{
+							Body:      "disable#tag2",
+							PageIndex: 4,
 						},
 					},
 				},
 			},
-			want: []string{"fuga"},
+			want: []string{"fuga", "tag", "tag1"},
 		},
 		{
 			name: "success: nothing",
@@ -108,7 +117,7 @@ func TestExtractLinksFromPage(t *testing.T) {
 				page: &domain.Page{
 					Lines: []*domain.Line{
 						{
-							Body:      "hoge",
+							Body:      "[hoge]",
 							PageIndex: 0,
 						},
 						{
@@ -120,7 +129,7 @@ func TestExtractLinksFromPage(t *testing.T) {
 							PageIndex: 2,
 						},
 						{
-							Body:      "[http://localhost:3000]",
+							Body:      "[http://localhost:3000]#hoge",
 							PageIndex: 3,
 						},
 					},
@@ -131,7 +140,10 @@ func TestExtractLinksFromPage(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := ExtractLinksFromPage(tt.args.page); !reflect.DeepEqual(got, tt.want) {
+			got := ExtractLinksFromPage(tt.args.page)
+			sort.Strings(got)
+			sort.Strings(tt.want)
+			if !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("got %v, want %v", got, tt.want)
 			}
 		})
