@@ -1,5 +1,6 @@
 import React from 'react'
 import Container from '@material-ui/core/Container'
+import uniq from 'lodash-es/uniq'
 
 import { CardList } from './CardList'
 import { Card, LinkCard, NewLinkCard, ExistLinkCard } from './Card'
@@ -36,7 +37,7 @@ export const SuggestCardList: React.FC<SuggestCardListProps> = ({
           .map(title => title.title)
       : []
 
-    return [...existLinkList, ...linkedList]
+    return uniq([...existLinkList, ...linkedList])
   }, [links, titles, ownTitle])
 
   // titlesに存在するページのうち、ownPageがもつリンクへのリンクをもっているもの
@@ -45,7 +46,7 @@ export const SuggestCardList: React.FC<SuggestCardListProps> = ({
       return []
     }
 
-    return links
+    const result = links
       .map(link => {
         const otherLinkTitles = titles.filter(
           title => title.title !== ownTitle && title.links?.includes(link),
@@ -57,6 +58,8 @@ export const SuggestCardList: React.FC<SuggestCardListProps> = ({
         return { link: link, list: otherLinkTitles.map(title => title.title) }
       })
       .filter(d => d)
+
+    return uniq(result)
   }, [links, titles, ownTitle])
 
   const notExistLinkList = React.useMemo(() => {
@@ -64,13 +67,15 @@ export const SuggestCardList: React.FC<SuggestCardListProps> = ({
       return []
     }
 
-    return links
+    const result = links
       .filter(link => {
         return !titles.map(title => title.title).includes(link)
       })
       .filter(link => {
         return !otherLinks.map(links => links.link).includes(link)
       })
+
+    return uniq(result)
   }, [links, titles, otherLinks])
 
   const handleMouseEnter = React.useCallback(
