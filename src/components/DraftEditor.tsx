@@ -88,6 +88,10 @@ export const DraftEditor: React.FC<DraftEditorProps> = ({
       })
     })
 
+    if (newPage.lines[0].body === '') {
+      return
+    }
+
     // page.id が存在しないのはDBに保存されていないページ
     // そのため、new page でも [title] page でも post をすればよい
     if (!newPage.id) {
