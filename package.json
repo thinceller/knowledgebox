@@ -16,7 +16,7 @@
     "react": "^16.14.0",
     "react-dom": "^16.13.1",
     "react-string-replace": "^0.4.4",
-    "swr": "^0.3.7",
+    "swr": "^0.3.8",
     "use-immer": "^0.4.1"
   },
   "devDependencies": {
