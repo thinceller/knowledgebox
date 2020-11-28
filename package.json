@@ -21,7 +21,7 @@
   },
   "devDependencies": {
     "@types/draft-js": "^0.10.44",
-    "@types/enzyme": "^3.10.5",
+    "@types/enzyme": "^3.10.8",
     "@types/jest": "^26.0.15",
     "@types/lodash-es": "^4.17.3",
     "@types/node": "^14.14.10",
