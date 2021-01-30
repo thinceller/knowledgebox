@@ -12,7 +12,7 @@
     "immer": "^8.0.1",
     "lodash-es": "^4.17.20",
     "next": "10.0.5",
-    "next-transpile-modules": "^6.0.0",
+    "next-transpile-modules": "^6.1.0",
     "react": "^16.14.0",
     "react-dom": "^16.14.0",
     "react-string-replace": "^0.4.4",
