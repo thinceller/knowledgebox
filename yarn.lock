@@ -2430,13 +2430,13 @@ end-of-stream@^1.1.0, end-of-stream@^1.4.1:
   dependencies:
     once "^1.4.0"
 
-enhanced-resolve@^5.3.2:
-  version "5.4.0"
-  resolved "https://registry.yarnpkg.com/enhanced-resolve/-/enhanced-resolve-5.4.0.tgz#a8bcf23b00affac9455cf71efd80844f4054f4dc"
-  integrity sha512-ZmqfWURB2lConOBM1JdCVfPyMRv5RdKWktLXO6123p97ovVm2CLBgw9t5MBj3jJWA6eHyOeIws9iJQoGFR4euQ==
+enhanced-resolve@^5.7.0:
+  version "5.7.0"
+  resolved "https://registry.yarnpkg.com/enhanced-resolve/-/enhanced-resolve-5.7.0.tgz#525c5d856680fbd5052de453ac83e32049958b5c"
+  integrity sha512-6njwt/NsZFUKhM6j9U8hzVyD4E4r0x7NQzhTCbcWOJ0IQjNSAoalWmb0AE51Wn+fwan5qVESWi7t2ToBxs9vrw==
   dependencies:
     graceful-fs "^4.2.4"
-    tapable "^2.0.0"
+    tapable "^2.2.0"
 
 enquirer@^2.3.6:
   version "2.3.6"
@@ -4889,13 +4889,13 @@ nearley@^2.7.10:
     randexp "0.4.6"
     semver "^5.4.1"
 
-next-transpile-modules@^6.0.0:
-  version "6.0.0"
-  resolved "https://registry.yarnpkg.com/next-transpile-modules/-/next-transpile-modules-6.0.0.tgz#ba2d9c944de34a6e04c8834b6a06dbc4b28e4611"
-  integrity sha512-+Xdn4Upb8FeOXorzqVFyqww3kR9ML6S7y6Q3gFnoLdsqC5Jim3fwGNGTHENLOwedoKxcM6bCyRBuMYzyxru/wA==
+next-transpile-modules@^6.2.0:
+  version "6.2.0"
+  resolved "https://registry.yarnpkg.com/next-transpile-modules/-/next-transpile-modules-6.2.0.tgz#fcc55babdc2a2b2883589b4be4d9f0cc3922d2ff"
+  integrity sha512-THMOWVuLqA16LsdU84pY+pKFfTHVykV1sJz2w6ANMZ7/yjfISHVHDxUnnGRP2XRK9Q/Wl9KBb5AK+spWv6j7yw==
   dependencies:
-    enhanced-resolve "^5.3.2"
-    pkg-dir "^5.0.0"
+    enhanced-resolve "^5.7.0"
+    escalade "^3.1.1"
 
 next@10.0.6:
   version "10.0.6"
@@ -6758,7 +6758,7 @@ table@^5.2.3:
     slice-ansi "^2.1.0"
     string-width "^3.0.0"
 
-tapable@^2.0.0:
+tapable@^2.2.0:
   version "2.2.0"
   resolved "https://registry.yarnpkg.com/tapable/-/tapable-2.2.0.tgz#5c373d281d9c672848213d0e037d1c4165ab426b"
   integrity sha512-FBk4IesMV1rBxX2tfiK8RAmogtWn53puLOQlvO8XuwlgxcYbP4mVPS9Ph4aeamSyyVjOl24aYWAuc8U5kCVwMw==
