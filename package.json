@@ -20,7 +20,7 @@
     "use-immer": "^0.4.2"
   },
   "devDependencies": {
-    "@types/draft-js": "^0.10.44",
+    "@types/draft-js": "^0.10.45",
     "@types/enzyme": "^3.10.8",
     "@types/jest": "^26.0.20",
     "@types/lodash-es": "^4.17.4",
