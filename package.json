@@ -17,7 +17,7 @@
     "react-dom": "^16.14.0",
     "react-string-replace": "^0.4.4",
     "swr": "^0.4.2",
-    "use-immer": "^0.4.2"
+    "use-immer": "^0.5.1"
   },
   "devDependencies": {
     "@types/draft-js": "^0.10.44",
