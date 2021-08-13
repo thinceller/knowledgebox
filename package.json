@@ -11,7 +11,7 @@
     "draft-js": "^0.11.7",
     "immer": "^8.0.1",
     "lodash-es": "^4.17.21",
-    "next": "10.0.8",
+    "next": "11.1.0",
     "next-transpile-modules": "^6.3.0",
     "react": "^16.14.0",
     "react-dom": "^16.14.0",
